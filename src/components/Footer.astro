@@ -1,0 +1,68 @@
+---
+const year = new Date().getFullYear();
+
+const links = [
+  {
+    label: 'GitHub',
+    href:  'https://github.com/atarico',
+    icon:  'gh',
+  },
+  {
+    label: 'LinkedIn',
+    href:  'https://linkedin.com/in/agustin-tarico',
+    icon:  'li',
+  },
+  {
+    label: 'agustintarico9@gmail.com',
+    href:  'mailto:agustintarico9@gmail.com',
+    icon:  '@',
+  },
+];
+---
+
+<footer class="border-t border-[var(--border-accent)] py-10 mt-20">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs text-muted">
+
+    <!-- Links sociales -->
+    <ul class="flex flex-wrap items-center gap-6">
+      {links.map(({ href, label, icon }) => (
+        <li>
+          <a
+            href={href}
+            target={href.startsWith('mailto') ? undefined : '_blank'}
+            rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+            class="footer-link flex items-center gap-2 text-muted hover:text-accent transition-colors duration-200"
+          >
+            <span class="text-accent opacity-60 font-bold">[{icon}]</span>
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Built with -->
+    <p class="text-center md:text-right text-muted">
+      <span class="text-accent opacity-50">//</span>{' '}
+      Built with{' '}
+      <a
+        href="https://astro.build"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-accent hover:text-glow transition-colors duration-200"
+      >
+        Astro
+      </a>
+      {' '}· {year}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer-link::before {
+    content: none;
+  }
+
+  .footer-link:hover {
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.4);
+  }
+</style>

@@ -1,0 +1,304 @@
+---
+---
+
+<section id="hero" class="hero-section">
+
+  <!-- ── Fondo: dot grid + vignette ── -->
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <!-- ── Contenido ── -->
+  <div class="hero-content">
+
+    <!-- Línea decorativa de terminal -->
+    <span class="hero-item hero-comment" style="animation-delay: 0ms">
+      // portfolio.init()
+    </span>
+
+    <!-- Saludo -->
+    <p class="hero-item hero-greeting" style="animation-delay: 120ms">
+      <span class="greeting-arrow">&gt;&nbsp;</span>Hola, soy
+    </p>
+
+    <!-- Nombre -->
+    <h1 class="hero-item hero-name" style="animation-delay: 260ms">
+      Agustín<br class="sm:hidden" /> Tarico
+    </h1>
+
+    <!-- Typing effect -->
+    <div class="hero-item hero-typing-row" style="animation-delay: 450ms">
+      <span id="typed-text" class="typed-text" aria-live="polite"></span>
+      <span class="typing-cursor cursor-blink" aria-hidden="true"></span>
+    </div>
+
+    <!-- Bio -->
+    <p class="hero-item hero-bio" style="animation-delay: 620ms">
+      Desarrollo aplicaciones web con JavaScript/TypeScript.<br />
+      Profesor en UTN. Construyo herramientas que resuelven problemas reales.
+    </p>
+
+    <!-- CTAs -->
+    <div class="hero-item hero-ctas" style="animation-delay: 780ms">
+      <a href="#projects" class="btn-primary">Ver proyectos</a>
+      <a href="#contact"  class="btn-ghost">Contactame</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Typing effect: JS vanilla ── -->
+<script>
+  const phrases: string[] = ['Web Developer', 'Profesor en la UTN', 'React - Astro - Supabase 🫶'];
+  const el       = document.getElementById('typed-text');
+  let current    = 0;
+  let charIndex  = 0;
+  let isDeleting = false;
+
+  function type() {
+    if (!el) return;
+
+    const phrase = phrases[current];
+
+    if (isDeleting) {
+      charIndex--;
+      el.textContent = phrase.slice(0, charIndex);
+    } else {
+      charIndex++;
+      el.textContent = phrase.slice(0, charIndex);
+    }
+
+    // Calcular próximo delay
+    let delay = isDeleting ? 55 : 95;
+
+    if (!isDeleting && charIndex === phrase.length) {
+      // Terminó de escribir → esperar antes de borrar
+      delay = 2000;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      // Terminó de borrar → siguiente frase
+      isDeleting = false;
+      current = (current + 1) % phrases.length;
+      delay = 450;
+    }
+
+    setTimeout(type, delay);
+  }
+
+  // Iniciar después de que las animaciones de entrada terminen
+  setTimeout(type, 1400);
+</script>
+
+<style>
+  /* ── Sección ── */
+  .hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 4rem 1.5rem 3rem;
+  }
+
+  /* ── Dot grid ── */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle,
+      rgba(0, 255, 65, 0.09) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+    background-position: center center;
+  }
+
+  /* Vignette: la grilla desvanece hacia los bordes */
+  .hero-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      transparent 30%,
+      rgba(10, 10, 10, 0.75) 65%,
+      rgba(10, 10, 10, 0.98) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* ── Contenido principal ── */
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ── Animación de entrada: fadeInUp ── */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-item {
+    opacity: 0;
+    animation: fadeInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* ── Línea comentario ── */
+  .hero-comment {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  /* ── Saludo ── */
+  .hero-greeting {
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .greeting-arrow {
+    color: var(--text-accent);
+    font-weight: 700;
+    text-shadow: var(--glow-sm);
+  }
+
+  /* ── Nombre ── */
+  .hero-name {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-top: 0.25rem;
+  }
+
+  /* ── Fila de typing ── */
+  .hero-typing-row {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    margin-top: 0.25rem;
+  }
+
+  .typed-text {
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  /* Cursor bloque tipo terminal */
+  .typing-cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.15em;
+    background-color: var(--text-accent);
+    vertical-align: text-bottom;
+    margin-left: 3px;
+    box-shadow: var(--glow-sm);
+  }
+
+  /* ── Bio ── */
+  .hero-bio {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 44rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ── CTAs ── */
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    margin-top: 0.75rem;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.35rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      color           0.2s ease,
+      box-shadow      0.2s ease,
+      border-color    0.2s ease;
+  }
+
+  /* Botón primario: borde + glow → rellena en hover */
+  .btn-primary {
+    color: var(--text-accent);
+    background-color: transparent;
+    border: 1px solid var(--text-accent);
+    box-shadow: var(--glow-sm);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--text-accent);
+    color: var(--bg-primary);
+    box-shadow: var(--glow-md);
+  }
+
+  /* Botón ghost: borde sutil → acento en hover */
+  .btn-ghost {
+    color: var(--text-muted);
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    color: var(--text-accent);
+    border-color: var(--border-accent);
+    box-shadow: var(--glow-sm);
+  }
+
+  /* ── Responsive: mobile ── */
+  @media (max-width: 640px) {
+    .hero-section {
+      padding: 5.5rem 1.25rem 3.5rem;
+      align-items: flex-start;
+      padding-top: 6.5rem;
+    }
+
+    .hero-name {
+      letter-spacing: -0.03em;
+    }
+
+    .hero-ctas {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

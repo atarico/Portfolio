@@ -1,0 +1,390 @@
+---
+import { projects } from '../data/projects';
+
+// SVG paths como constantes para mantener el template limpio
+const ICON_GITHUB = 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z';
+const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
+---
+
+<section id="projects" class="projects-section">
+  <div class="projects-inner">
+
+    <!-- ── Título terminal ── -->
+    <header class="projects-header reveal">
+      <p class="section-label">
+        <span class="label-prefix">&gt;</span> ls ./proyectos
+      </p>
+      <p class="section-meta">
+        <span class="meta-count">{projects.length} entries</span>
+        <span class="meta-sep">//</span>
+        <span>featured projects</span>
+      </p>
+    </header>
+
+    <!-- ── Grid de cards ── -->
+    <div class="projects-grid">
+      {projects.map((project, i) => (
+        <article
+          class="project-card reveal"
+          style={`transition-delay: ${i * 130}ms`}
+        >
+          <!-- Barra de título de la "terminal" -->
+          <header class="card-titlebar">
+            <div class="card-titlebar-left">
+              <!-- Indicador de status -->
+              <span
+                class={`status-dot ${project.status === 'Producción' ? 'status-prod' : 'status-dev'}`}
+                title={project.status}
+                aria-label={project.status}
+              />
+              <span class="card-title">{project.title}</span>
+            </div>
+            <span class={`status-badge ${project.status === 'Producción' ? 'badge-prod' : 'badge-dev'}`}>
+              {project.status}
+            </span>
+          </header>
+
+          <!-- Cuerpo de la card -->
+          <div class="card-body">
+            <!-- Descripción -->
+            <p class="card-description">{project.description}</p>
+
+            <!-- Tech stack -->
+            <ul class="card-tags" aria-label="Tecnologías">
+              {project.tech.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+
+            <!-- Links -->
+            <footer class="card-links">
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="card-link"
+                  aria-label={`Repositorio de ${project.title} en GitHub`}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d={ICON_GITHUB} />
+                  </svg>
+                  GitHub
+                </a>
+              )}
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="card-link card-link--demo"
+                  aria-label={`Demo de ${project.title}`}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d={ICON_EXTERNAL} />
+                  </svg>
+                  Demo
+                </a>
+              )}
+              {!project.github && !project.demo && (
+                <span class="card-link card-link--private" aria-label="Repositorio privado">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                  Privado
+                </span>
+              )}
+            </footer>
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const cards = document.querySelectorAll<HTMLElement>('#projects .reveal');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  cards.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  /* ── Sección ── */
+  .projects-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .projects-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* ── Header ── */
+  .projects-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .section-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .label-prefix {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    font-weight: 700;
+  }
+
+  .section-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .meta-count {
+    color: var(--text-accent);
+    opacity: 0.7;
+  }
+
+  .meta-sep {
+    opacity: 0.3;
+  }
+
+  /* ── Grid ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .projects-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── Card ── */
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    box-shadow: var(--glow-sm), 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition:
+      border-color 0.25s ease,
+      box-shadow   0.25s ease,
+      transform    0.25s ease;
+    will-change: transform;
+  }
+
+  .project-card:hover {
+    border-color: var(--text-accent);
+    box-shadow: var(--glow-md), 0 8px 32px rgba(0, 0, 0, 0.5);
+    transform: translateY(-4px);
+  }
+
+  /* ── Titlebar de cada card ── */
+  .card-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    background: rgba(0, 0, 0, 0.35);
+    border-bottom: 1px solid var(--border-accent);
+    user-select: none;
+  }
+
+  .card-titlebar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .card-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Status dot ── */
+  .status-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-prod {
+    background: var(--text-accent);
+    box-shadow: 0 0 5px rgba(0, 255, 65, 0.7);
+  }
+
+  .status-dev {
+    background: #febc2e;
+    box-shadow: 0 0 5px rgba(254, 188, 46, 0.6);
+    animation: pulse-dev 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dev {
+    0%, 100% { opacity: 1;   box-shadow: 0 0 5px  rgba(254, 188, 46, 0.6); }
+    50%       { opacity: 0.5; box-shadow: 0 0 12px rgba(254, 188, 46, 0.3); }
+  }
+
+  /* ── Status badge ── */
+  .status-badge {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .badge-prod {
+    color: var(--text-accent);
+    background: rgba(0, 255, 65, 0.08);
+    border: 1px solid rgba(0, 255, 65, 0.25);
+  }
+
+  .badge-dev {
+    color: #febc2e;
+    background: rgba(254, 188, 46, 0.08);
+    border: 1px solid rgba(254, 188, 46, 0.25);
+  }
+
+  /* ── Cuerpo de la card ── */
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem 1.1rem 0.9rem;
+    gap: 0.9rem;
+  }
+
+  .card-description {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    flex: 1;
+  }
+
+  /* ── Tech tags ── */
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--border-accent);
+    border-radius: 3px;
+    color: var(--text-accent);
+    background: rgba(0, 255, 65, 0.04);
+    transition:
+      background  0.2s ease,
+      box-shadow  0.2s ease;
+  }
+
+  .project-card:hover .tag {
+    background: rgba(0, 255, 65, 0.08);
+    box-shadow: 0 0 4px rgba(0, 255, 65, 0.2);
+  }
+
+  /* ── Links ── */
+  .card-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+  }
+
+  .card-link svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  .card-link:hover {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+  }
+
+  .card-link--demo:hover {
+    color: #61afef;
+  }
+
+  .card-link--private {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ── Reveal: IntersectionObserver ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>

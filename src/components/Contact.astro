@@ -1,0 +1,646 @@
+---
+const FORMSPREE_URL = 'https://formspree.io/f/TU_ID';
+
+interface ContactLink {
+  label: string;
+  value: string;
+  href: string;
+  prefix: string;
+}
+
+const contactLinks: ContactLink[] = [
+  {
+    label:  'email',
+    value:  'agustintarico9@gmail.com',
+    href:   'mailto:agustintarico9@gmail.com',
+    prefix: '@',
+  },
+  {
+    label:  'github',
+    value:  'github.com/atarico',
+    href:   'https://github.com/atarico',
+    prefix: 'gh',
+  },
+  {
+    label:  'linkedin',
+    value:  'linkedin.com/in/agustin-tarico',
+    href:   'https://linkedin.com/in/agustin-tarico',
+    prefix: 'li',
+  },
+  {
+    label:  'teléfono',
+    value:  '(+54) 1156643612',
+    href:   'tel:+541156643612',
+    prefix: '☎',
+  },
+];
+---
+
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+
+    <!-- ── Título terminal ── -->
+    <header class="contact-header reveal">
+      <p class="section-label">
+        <span class="label-prefix">&gt;</span> ssh atarico@contacto
+      </p>
+      <p class="section-meta">
+        <span class="meta-ok">Connection established.</span>
+        <span class="meta-sep">//</span>
+        <span>Ready to receive.</span>
+      </p>
+    </header>
+
+    <!-- ── Layout dos columnas ── -->
+    <div class="contact-grid">
+
+      <!-- Columna izquierda: formulario -->
+      <div class="reveal" style="transition-delay: 120ms">
+        <div class="form-terminal">
+
+          <!-- Titlebar -->
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"    aria-hidden="true"></span>
+            <span class="dot dot-yellow" aria-hidden="true"></span>
+            <span class="dot dot-green"  aria-hidden="true"></span>
+            <span class="terminal-title">send-message.sh</span>
+          </div>
+
+          <!-- Cuerpo del formulario -->
+          <div class="terminal-body">
+
+            <!-- Prompt del "comando" -->
+            <p class="cmd-line">
+              <span class="prompt">$</span>
+              <span class="cmd-text">send-message --to atarico</span>
+              <span class="cursor-blink cmd-cursor" aria-hidden="true"></span>
+            </p>
+
+            <form
+              action={FORMSPREE_URL}
+              method="POST"
+              class="contact-form"
+              novalidate
+              id="contact-form"
+            >
+              <!-- Campo nombre -->
+              <div class="field-group">
+                <label for="name" class="field-label">
+                  <span class="field-arrow">&gt;</span> nombre
+                  <span class="field-required" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="field-input"
+                  autocomplete="name"
+                  required
+                  spellcheck="false"
+                />
+              </div>
+
+              <!-- Campo email -->
+              <div class="field-group">
+                <label for="email" class="field-label">
+                  <span class="field-arrow">&gt;</span> email
+                  <span class="field-required" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="field-input"
+                  autocomplete="email"
+                  required
+                  spellcheck="false"
+                />
+              </div>
+
+              <!-- Campo mensaje -->
+              <div class="field-group">
+                <label for="message" class="field-label">
+                  <span class="field-arrow">&gt;</span> mensaje
+                  <span class="field-required" aria-hidden="true">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  class="field-input field-textarea"
+                  rows="5"
+                  required
+                  spellcheck="false"
+                ></textarea>
+              </div>
+
+              <!-- Submit -->
+              <div class="form-footer">
+                <button type="submit" class="btn-submit" id="submit-btn">
+                  <span class="btn-prefix" aria-hidden="true">$</span>
+                  <span class="btn-text">Enviar mensaje</span>
+                </button>
+                <p class="form-status" id="form-status" aria-live="polite"></p>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: info de contacto -->
+      <div class="contact-info reveal" style="transition-delay: 280ms">
+
+        <p class="info-intro">
+          <span class="info-prompt">&gt;&nbsp;</span>
+          ¿Preferís el contacto directo?
+        </p>
+
+        <ul class="info-links">
+          {contactLinks.map((link, i) => (
+            <li
+              class="info-item"
+              style={`animation-delay: ${400 + i * 100}ms`}
+            >
+              <a
+                href={link.href}
+                class="info-link"
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >
+                <span class="info-prefix" aria-hidden="true">[{link.prefix}]</span>
+                <span class="info-label">{link.label}</span>
+                <span class="info-sep" aria-hidden="true">→</span>
+                <span class="info-value">{link.value}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Nota sobre tiempo de respuesta -->
+        <p class="info-footer">
+          <span class="info-comment">//</span>
+          Respondo en menos de 24hs.
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  /* ── Reveal con IntersectionObserver ── */
+  const revealEls = document.querySelectorAll<HTMLElement>('#contact .reveal');
+
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  revealEls.forEach((el) => revealObserver.observe(el));
+
+  /* ── Estado del formulario ── */
+  const form       = document.getElementById('contact-form')   as HTMLFormElement | null;
+  const statusEl   = document.getElementById('form-status')    as HTMLElement | null;
+  const submitBtn  = document.getElementById('submit-btn')     as HTMLButtonElement | null;
+  const btnText    = submitBtn?.querySelector<HTMLElement>('.btn-text');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form || !statusEl || !submitBtn || !btnText) return;
+
+    // Estado: enviando
+    submitBtn.disabled = true;
+    btnText.textContent = 'Enviando...';
+    statusEl.textContent = '';
+    statusEl.className = 'form-status';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+
+      if (res.ok) {
+        statusEl.textContent = '✓ Mensaje enviado correctamente.';
+        statusEl.classList.add('status-ok');
+        form.reset();
+        btnText.textContent = 'Enviar mensaje';
+        submitBtn.disabled = false;
+      } else {
+        throw new Error('server-error');
+      }
+    } catch {
+      statusEl.textContent = '✗ Error al enviar. Intentá de nuevo.';
+      statusEl.classList.add('status-error');
+      btnText.textContent = 'Enviar mensaje';
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  /* ── Sección ── */
+  .contact-section {
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .contact-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* ── Header ── */
+  .contact-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .section-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .label-prefix {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    font-weight: 700;
+  }
+
+  .section-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .meta-ok  { color: var(--text-accent); opacity: 0.8; }
+  .meta-sep { opacity: 0.3; }
+
+  /* ── Grid ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr 0.85fr;
+      align-items: start;
+      gap: 3rem;
+    }
+  }
+
+  /* ── Terminal del formulario ── */
+  .form-terminal {
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--glow-sm), 0 12px 36px rgba(0, 0, 0, 0.45);
+  }
+
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-accent);
+    user-select: none;
+  }
+
+  .dot {
+    display: block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-red    { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green  { background: #28c840; }
+
+  .terminal-title {
+    margin-left: 0.5rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .terminal-body {
+    padding: 1.1rem 1.25rem 1.4rem;
+    background: rgba(10, 10, 10, 0.97);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  /* Línea del comando */
+  .cmd-line {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .prompt {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    font-weight: 700;
+  }
+
+  .cmd-text {
+    color: var(--text-primary);
+    opacity: 0.75;
+  }
+
+  .cmd-cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.85em;
+    background: var(--text-accent);
+    vertical-align: text-bottom;
+    box-shadow: var(--glow-sm);
+  }
+
+  /* ── Formulario ── */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    cursor: text;
+    user-select: none;
+  }
+
+  .field-arrow {
+    color: var(--text-accent);
+    opacity: 0.7;
+    font-weight: 700;
+  }
+
+  .field-required {
+    color: var(--text-accent);
+    opacity: 0.5;
+    font-size: 0.6rem;
+  }
+
+  .field-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    transition:
+      border-color 0.2s ease,
+      box-shadow   0.2s ease,
+      background   0.2s ease;
+    caret-color: var(--text-accent);
+  }
+
+  .field-input::placeholder {
+    color: transparent;
+  }
+
+  .field-input:focus {
+    border-color: var(--text-accent);
+    box-shadow: var(--glow-sm);
+    background: rgba(0, 255, 65, 0.03);
+  }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 7rem;
+    max-height: 7rem;
+    line-height: 1.6;
+  }
+
+  /* ── Botón submit ── */
+  .form-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-accent);
+    background: transparent;
+    border: 1px solid var(--text-accent);
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: var(--glow-sm);
+    transition:
+      background 0.2s ease,
+      color      0.2s ease,
+      box-shadow 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .btn-submit:hover:not(:disabled) {
+    background: var(--text-accent);
+    color: var(--bg-primary);
+    box-shadow: var(--glow-md);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-prefix {
+    color: inherit;
+    opacity: 0.7;
+    font-size: 0.85em;
+  }
+
+  /* Estado del formulario */
+  .form-status {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    min-height: 1rem;
+  }
+
+  .form-status.status-ok    { color: var(--text-accent); }
+  .form-status.status-error { color: #ff5f57; }
+
+  /* ── Info de contacto ── */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .info-intro {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .info-prompt {
+    color: var(--text-accent);
+    font-weight: 700;
+    opacity: 0.7;
+  }
+
+  .info-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .info-item {
+    opacity: 0;
+    animation: slideIn 0.4s ease forwards;
+  }
+
+  /* Solo anima cuando el padre es visible */
+  .reveal:not(.is-visible) .info-item {
+    animation: none;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0);    }
+  }
+
+  .info-link {
+    display: grid;
+    grid-template-columns: 2.2rem 4.5rem auto 1fr;
+    align-items: baseline;
+    gap: 0 0.5rem;
+    padding: 0.55rem 0.6rem;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+    text-decoration: none;
+  }
+
+  .info-link:hover {
+    background: rgba(0, 255, 65, 0.05);
+  }
+
+  .info-prefix {
+    font-size: 0.76rem;
+    color: var(--text-accent);
+    opacity: 0.55;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .info-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .info-sep {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    opacity: 0.3;
+  }
+
+  .info-value {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .info-link:hover .info-value {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+  }
+
+  .info-footer {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .info-comment {
+    color: var(--text-accent);
+    opacity: 0.4;
+  }
+
+  /* ── Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 480px) {
+    .info-link {
+      grid-template-columns: 2rem 4rem auto 1fr;
+    }
+
+    .info-value {
+      font-size: 0.7rem;
+    }
+  }
+</style>

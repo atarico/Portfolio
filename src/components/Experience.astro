@@ -1,0 +1,365 @@
+---
+import { experience } from '../data/experience';
+
+// Hash corto simulado a partir del índice, para el look de "git log"
+const fakeHashes = ['a3f9c12', 'e81b047', 'c502fd9', '7d3ae61'];
+---
+
+<section id="experience" class="exp-section">
+  <div class="exp-inner">
+
+    <!-- ── Título terminal ── -->
+    <header class="exp-header reveal">
+      <p class="section-label">
+        <span class="label-prefix">&gt;</span> git log --experience
+      </p>
+      <p class="section-meta">
+        <span class="meta-count">{experience.length} commits</span>
+        <span class="meta-sep">//</span>
+        <span>HEAD → main</span>
+      </p>
+    </header>
+
+    <!-- ── Timeline ── -->
+    <ol class="timeline" aria-label="Historial de experiencia">
+      {experience.map((job, i) => (
+        <li
+          class={`timeline-item reveal${job.highlight ? ' is-highlight' : ''}`}
+          style={`transition-delay: ${i * 140}ms`}
+        >
+          <!-- Nodo en la línea -->
+          <div class="timeline-node-col" aria-hidden="true">
+            <span class={`node${job.highlight ? ' node--highlight' : ''}`} />
+          </div>
+
+          <!-- Contenido del "commit" -->
+          <article class="commit-card">
+            <!-- Hash + periodo -->
+            <div class="commit-meta">
+              <span class="commit-hash" aria-label="Hash de commit">
+                {fakeHashes[i] ?? fakeHashes[0]}
+              </span>
+              <span class="commit-sep">·</span>
+              <time class="commit-period">{job.period}</time>
+              {job.highlight && (
+                <span class="highlight-badge" aria-label="Posición destacada">
+                  ★ destacado
+                </span>
+              )}
+            </div>
+
+            <!-- Rol -->
+            <h3 class="commit-role">{job.role}</h3>
+
+            <!-- Empresa -->
+            <p class="commit-company">
+              <span class="company-arrow">&gt;&nbsp;</span>{job.company}
+            </p>
+
+            <!-- Descripción -->
+            <p class="commit-description">{job.description}</p>
+
+            <!-- Tech tags -->
+            <ul class="commit-tags" aria-label="Tecnologías">
+              {job.tech.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+          </article>
+        </li>
+      ))}
+    </ol>
+
+  </div>
+</section>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('#experience .reveal');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  items.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  /* ── Sección ── */
+  .exp-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .exp-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* ── Header ── */
+  .exp-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .section-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .label-prefix {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    font-weight: 700;
+  }
+
+  .section-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .meta-count { color: var(--text-accent); opacity: 0.7; }
+  .meta-sep   { opacity: 0.3; }
+
+  /* ── Timeline ── */
+  .timeline {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  /* ── Item del timeline ── */
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0 1.25rem;
+    position: relative;
+  }
+
+  /* Columna del nodo + línea vertical */
+  .timeline-node-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.25rem;
+    position: relative;
+  }
+
+  /* Línea vertical continua entre nodos */
+  .timeline-node-col::after {
+    content: '';
+    position: absolute;
+    top: 1.1rem;
+    bottom: -1rem; /* se extiende hasta el próximo item */
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      var(--border-accent),
+      rgba(0, 255, 65, 0.08)
+    );
+  }
+
+  /* Ocultar la línea en el último item */
+  .timeline-item:last-child .timeline-node-col::after {
+    display: none;
+  }
+
+  /* ── Nodo ── */
+  .node {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-accent);
+    box-shadow: 0 0 0 2px var(--bg-primary);
+    flex-shrink: 0;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-item.is-visible .node {
+    border-color: var(--text-accent);
+    box-shadow: 0 0 0 2px var(--bg-primary), var(--glow-sm);
+  }
+
+  /* Nodo highlight: más grande, más brillante */
+  .node--highlight {
+    width: 16px;
+    height: 16px;
+    background: rgba(0, 255, 65, 0.15);
+    border: 2px solid var(--text-accent);
+    box-shadow: 0 0 0 3px var(--bg-primary), var(--glow-sm);
+    margin-top: -3px; /* compensar tamaño para alinear con el texto */
+  }
+
+  .timeline-item.is-visible .node--highlight {
+    background: rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 0 3px var(--bg-primary), var(--glow-md);
+    animation: pulse-node 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-node {
+    0%, 100% { box-shadow: 0 0 0 3px var(--bg-primary), var(--glow-sm); }
+    50%       { box-shadow: 0 0 0 3px var(--bg-primary), var(--glow-md); }
+  }
+
+  /* ── Commit card ── */
+  .commit-card {
+    padding-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .timeline-item:last-child .commit-card {
+    padding-bottom: 0;
+  }
+
+  /* Meta: hash + periodo + badge */
+  .commit-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+
+  .commit-hash {
+    color: var(--text-accent);
+    opacity: 0.6;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .commit-sep {
+    color: var(--text-muted);
+    opacity: 0.4;
+  }
+
+  .commit-period {
+    color: var(--text-muted);
+  }
+
+  .highlight-badge {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-accent);
+    background: rgba(0, 255, 65, 0.08);
+    border: 1px solid rgba(0, 255, 65, 0.25);
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+  }
+
+  /* Rol */
+  .commit-role {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  /* Empresa */
+  .commit-company {
+    font-size: 0.82rem;
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .company-arrow {
+    font-weight: 700;
+    opacity: 0.7;
+  }
+
+  /* Descripción */
+  .commit-description {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 52rem;
+  }
+
+  /* Tags */
+  .commit-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin-top: 0.15rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding: 0.18rem 0.5rem;
+    border: 1px solid var(--border-accent);
+    border-radius: 3px;
+    color: var(--text-accent);
+    background: rgba(0, 255, 65, 0.04);
+  }
+
+  /* ── Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Mobile: simplificar timeline ── */
+  @media (max-width: 480px) {
+    .timeline-item {
+      grid-template-columns: 1.25rem 1fr;
+      gap: 0 0.875rem;
+    }
+
+    .node {
+      width: 8px;
+      height: 8px;
+    }
+
+    .node--highlight {
+      width: 12px;
+      height: 12px;
+      margin-top: -2px;
+    }
+
+    .commit-card {
+      padding-bottom: 2rem;
+    }
+  }
+</style>

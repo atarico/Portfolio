@@ -1,0 +1,348 @@
+---
+const stack = ['TypeScript', 'React', 'Astro', 'Node.js', 'Supabase'];
+
+interface Stat {
+  key: string;
+  value: string | string[] | number;
+}
+
+const stats: Stat[] = [
+  { key: 'ubicación',   value: 'Buenos Aires, Argentina' },
+  { key: 'rol_actual',  value: 'Profesor UTN + Dev'       },
+  { key: 'stack',       value: stack                      },
+  { key: 'educación',   value: 'Ing. Sistemas (en curso)' },
+  { key: 'café_por_día', value: 3                         },
+];
+---
+
+<section id="about" class="about-section">
+  <div class="about-inner">
+
+    <!-- ── Título terminal ── -->
+    <header class="about-header reveal">
+      <p class="section-label">
+        <span class="label-prefix">$</span> cat about.md
+      </p>
+    </header>
+
+    <h2 class="about-title">Sobre mí</h2>
+    <!-- ── Grid dos columnas ── -->
+    <div class="about-grid">
+
+      <!-- Columna izquierda: texto -->
+      <div class="about-text reveal" style="transition-delay: 120ms">
+
+        <p class="about-paragraph">
+          Soy desarrollador web enfocado en el ecosistema
+          JavaScript/TypeScript. Actualmente curso Ingeniería en Sistemas en
+          la UTN y soy profesor de Programación III en la Tecnicatura Superior
+          en Programación de la misma universidad.
+        </p>
+
+        <p class="about-paragraph">
+          Mi experiencia docente me dio una buenas buenas habilidades de oratoria para una comunicación efectiva en equipos de desarrollo y tratar de explicar arquitecturas complejas de forma simple para que todos puedan entenderlas. 
+        </p>
+
+        <p class="about-paragraph">
+          Trabajo con React, Astro, Next.js, Node.js y Supabase. Me gusta
+          crear herramientas que resuelvan problemas reales — desde apps de
+          geolocalización hasta sistemas de gestión de eventos.
+        </p>
+      </div>
+
+      <!-- Columna derecha: ventana de terminal -->
+      <div class="reveal" style="transition-delay: 260ms">
+        <div class="terminal-window">
+
+          <!-- Barra de título -->
+          <div class="terminal-titlebar">
+            <span class="dot dot-red"   aria-hidden="true"></span>
+            <span class="dot dot-yellow" aria-hidden="true"></span>
+            <span class="dot dot-green"  aria-hidden="true"></span>
+            <span class="terminal-title">atarico@portfolio: ~</span>
+          </div>
+
+          <!-- Cuerpo de la terminal -->
+          <div class="terminal-body">
+
+            <!-- Prompt del comando -->
+            <p class="terminal-line">
+              <span class="t-prompt">&gt;&nbsp;</span>
+              <span class="t-cmd">system.fetch</span>
+              <span class="t-paren">(</span>
+              <span class="t-string">"atarico/stats"</span>
+              <span class="t-paren">)</span>
+            </p>
+
+            <!-- Output JSON -->
+            <div class="t-output">
+              <p class="t-brace">&#123;</p>
+
+              {stats.map((stat, i) => (
+                <p class="t-prop" style={`animation-delay: ${200 + i * 120}ms`}>
+                  <span class="t-key">"{stat.key}"</span>
+                  <span class="t-colon">:&nbsp;</span>
+
+                  {Array.isArray(stat.value) ? (
+                    <span class="t-array">
+                      [&thinsp;
+                      {stat.value.map((v, j, arr) => (
+                        <span>
+                          <span class="t-string">"{v}"</span>
+                          {j < arr.length - 1 && <span class="t-colon">,&nbsp;</span>}
+                        </span>
+                      ))}
+                      &thinsp;]
+                    </span>
+                  ) : typeof stat.value === 'number' ? (
+                    <span class="t-number">{stat.value}</span>
+                  ) : (
+                    <span class="t-string">"{stat.value}"</span>
+                  )}
+
+                  {i < stats.length - 1 && <span class="t-colon">,</span>}
+                </p>
+              ))}
+
+              <p class="t-brace">&#125;</p>
+            </div>
+
+            <!-- Prompt idle -->
+            <p class="terminal-line t-idle">
+              <span class="t-prompt">&gt;&nbsp;</span>
+              <span class="cursor-blink t-cursor-idle" aria-hidden="true"></span>
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const targets = document.querySelectorAll<HTMLElement>('#about .reveal');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  targets.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  /* ── Sección ── */
+  .about-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .about-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* ── Título terminal ── */
+  .about-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .section-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .label-prefix {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+  }
+
+  /* ── Grid ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: 3.5rem;
+    }
+  }
+
+  /* ── Texto del perfil ── */
+  .about-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+
+  .about-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    bottom: 0.15em;
+    width: 3px;
+    background: var(--text-accent);
+    box-shadow: var(--glow-sm);
+    border-radius: 2px;
+  }
+
+  .about-paragraph {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    color: var(--text-muted);
+    line-height: 1.85;
+    margin-bottom: 1.1rem;
+  }
+
+  .about-paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Ventana de terminal ── */
+  .terminal-window {
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--glow-sm), 0 16px 40px rgba(0, 0, 0, 0.5);
+    font-size: 0.82rem;
+  }
+
+  /* Barra de título */
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-accent);
+    user-select: none;
+  }
+
+  .dot {
+    display: block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-red    { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green  { background: #28c840; }
+
+  .terminal-title {
+    margin-left: 0.5rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* Cuerpo */
+  .terminal-body {
+    padding: 1.1rem 1.25rem 1rem;
+    background: rgba(10, 10, 10, 0.97);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .terminal-line {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  /* Output JSON */
+  .t-output {
+    margin: 0.5rem 0 0.3rem 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .t-brace {
+    color: var(--text-primary);
+  }
+
+  .t-prop {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    padding-left: 1.2rem;
+    opacity: 0;
+    animation: propReveal 0.4s ease forwards;
+  }
+
+  /* Colores sintaxis */
+  .t-prompt  { color: var(--text-accent); text-shadow: var(--glow-sm); font-weight: 700; }
+  .t-cmd     { color: #61afef; }
+  .t-paren   { color: #abb2bf; }
+  .t-string  { color: #98c379; }
+  .t-key     { color: #e06c75; }
+  .t-number  { color: #d19a66; }
+  .t-colon   { color: #abb2bf; }
+  .t-array   { color: #abb2bf; }
+
+  /* Cursor idle */
+  .t-idle {
+    margin-top: 0.35rem;
+  }
+
+  .t-cursor-idle {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.85em;
+    background-color: var(--text-accent);
+    vertical-align: text-bottom;
+    box-shadow: var(--glow-sm);
+  }
+
+  /* ── Reveal: IntersectionObserver ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity  0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Animación de props del JSON ── */
+  @keyframes propReveal {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0);    }
+  }
+
+  /* El trigger de propReveal arranca solo cuando la ventana es visible */
+  .reveal:not(.is-visible) .t-prop {
+    animation: none;
+  }
+</style>

@@ -1,0 +1,337 @@
+---
+interface Skill {
+  name: string;
+}
+
+interface Category {
+  icon: string;
+  label: string;
+  pkg: string; // nombre del "paquete" en la línea de header
+  skills: Skill[];
+}
+
+const categories: Category[] = [
+  {
+    icon: '📦',
+    label: 'frontend',
+    pkg: 'frontend@latest',
+    skills: [
+      { name: 'React.js',           },
+      { name: 'Astro.js',           },
+      { name: 'Next.js',            },
+      { name: 'TypeScript',         },
+      { name: 'JavaScript (ES6+)',  },
+      { name: 'HTML5',              },
+      { name: 'CSS3',               },
+      { name: 'Tailwind CSS',       },
+    ],
+  },
+  {
+    icon: '📦',
+    label: 'backend & db',
+    pkg: 'backend-db@latest',
+    skills: [
+      { name: 'Node.js',    },
+      { name: 'Supabase',   },
+      { name: 'C#',         },
+      { name: 'REST APIs',  },
+    ],
+  },
+  {
+    icon: '📦',
+    label: 'tools',
+    pkg: 'tools@latest',
+    skills: [
+      { name: 'Git',    },
+      { name: 'GitHub', },
+      { name: 'Scrum',  },
+      { name: 'pnpm',   },
+    ],
+  },
+];
+
+
+---
+
+<section id="tech" class="tech-section">
+  <div class="tech-inner">
+
+    <!-- ── Título terminal ── -->
+    <header class="tech-header reveal">
+      <p class="section-label">
+        <span class="label-prefix">&gt;</span> npm list --skills
+      </p>
+      <p class="section-meta">
+        <span class="meta-count">
+          {categories.reduce((acc, c) => acc + c.skills.length, 0)} packages
+        </span>
+        <span class="meta-sep">//</span>
+        <span>deduped</span>
+      </p>
+    </header>
+
+    <!-- ── Grid de categorías ── -->
+    <div class="tech-grid">
+      {categories.map((cat, ci) => (
+        <div
+          class="tech-card reveal"
+          style={`transition-delay: ${ci * 150}ms`}
+        >
+          <!-- Header tipo npm/pnpm output -->
+          <div class="card-header">
+            <span class="card-icon" aria-hidden="true">{cat.icon}</span>
+            <span class="card-pkg">{cat.pkg}</span>
+          </div>
+
+          <!-- Tree de skills -->
+          <ul class="skill-tree" aria-label={`Skills de ${cat.label}`}>
+            {cat.skills.map((skill, si) => {
+              const isLast = si === cat.skills.length - 1;
+              return (
+                <li class="skill-row">
+                  <!-- Conector del árbol -->
+                  <span class="tree-connector" aria-hidden="true">
+                    {isLast ? '└──' : '├──'}
+                  </span>
+
+                  <!-- Nombre de la skill -->
+                  <span class="skill-name">{skill.name}</span>
+                </li>
+              );
+            })}
+          </ul>
+
+          <!-- Footer: total de items -->
+          <p class="card-footer" aria-hidden="true">
+            <span class="footer-tree">└──</span>
+            <span class="footer-count">{cat.skills.length} dependencies</span>
+          </p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('#tech .reveal');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  items.forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  /* ── Sección ── */
+  .tech-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .tech-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* ── Header ── */
+  .tech-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .section-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .label-prefix {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+    font-weight: 700;
+  }
+
+  .section-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .meta-count { color: var(--text-accent); opacity: 0.7; }
+  .meta-sep   { opacity: 0.3; }
+
+  /* ── Grid de categorías ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .tech-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .tech-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── Card ── */
+  .tech-card {
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    transition:
+      border-color 0.25s ease,
+      box-shadow   0.25s ease;
+  }
+
+  .tech-card:hover {
+    border-color: var(--text-accent);
+    box-shadow: var(--glow-sm), 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ── Header de la card ── */
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--border-accent);
+  }
+
+  .card-icon {
+    font-size: 0.85rem;
+    line-height: 1;
+  }
+
+  .card-pkg {
+    font-size: 0.72rem;
+    color: var(--text-accent);
+    letter-spacing: 0.06em;
+    text-shadow: var(--glow-sm);
+  }
+
+  /* ── Tree de skills ── */
+  .skill-tree {
+    list-style: none;
+    padding: 0.75rem 0.9rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr auto;
+    align-items: baseline;
+    gap: 0 0.35rem;
+    padding: 0.28rem 0;
+    transition: background 0.15s ease;
+    border-radius: 3px;
+    cursor: default;
+  }
+
+  .skill-row:hover {
+    background: rgba(0, 255, 65, 0.04);
+  }
+
+  /* Conector ├── └── */
+  .tree-connector {
+    color: var(--text-muted);
+    opacity: 0.45;
+    font-size: 0.72rem;
+    letter-spacing: -0.04em;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  /* Nombre de la skill */
+  .skill-name {
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .skill-row:hover .skill-name {
+    color: var(--text-accent);
+    text-shadow: var(--glow-sm);
+  }
+
+  /* Barra de nivel ████░░ */
+  .skill-bar {
+    font-size: 0.58rem;
+    letter-spacing: -0.05em;
+    color: var(--text-muted);
+    opacity: 0.5;
+    user-select: none;
+    white-space: nowrap;
+    transition: color 0.2s ease, opacity 0.2s ease;
+    line-height: 1;
+    padding-top: 0.1em;
+  }
+
+  .skill-row:hover .skill-bar {
+    color: var(--text-accent);
+    opacity: 0.75;
+  }
+
+  /* ── Footer de la card ── */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem 0.75rem;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+    user-select: none;
+  }
+
+  .footer-tree {
+    letter-spacing: -0.04em;
+  }
+
+  .footer-count {
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>

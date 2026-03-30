@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* ─── Tailwind v4 design tokens ────────────────────────────────────────────── */
+@theme {
+  --color-surface: #0a0a0a;
+  --color-surface-alt: #111111;
+  --color-surface-card: #0d0d0d;
+  --color-accent: #00ff41;
+  --color-accent-dim: rgba(0, 255, 65, 0.08);
+  --color-body: #f0f0f0;
+  --color-muted: #555555;
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+/* ─── CSS custom properties (para usar con var()) ───────────────────────────── */
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --text-primary: #f0f0f0;
+  --text-accent: #00ff41;
+  --text-muted: #888;
+  --border-accent: rgba(0, 255, 65, 0.25);
+  --glow-sm: 0 0 6px rgba(0, 255, 65, 0.35);
+  --glow-md: 0 0 12px rgba(0, 255, 65, 0.40), 0 0 24px rgba(0, 255, 65, 0.15);
+  --glow-lg: 0 0 20px rgba(0, 255, 65, 0.50), 0 0 40px rgba(0, 255, 65, 0.20);
+}
+
+/* ─── Reset mínimo ──────────────────────────────────────────────────────────── */
+@layer base {
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: 1.7;
+    background-color: var(--bg-primary);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+/* ─── Selección de texto ────────────────────────────────────────────────────── */
+::selection {
+  background-color: rgba(0, 255, 65, 0.22);
+  color: var(--text-accent);
+}
+
+/* ─── Scrollbar custom ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-accent);
+  box-shadow: var(--glow-sm);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-accent) var(--bg-secondary);
+}
+
+/* ─── Accesibilidad global ──────────────────────────────────────────────────── */
+@layer base {
+
+  /* Focus visible consistente para teclado */
+  :focus-visible {
+    outline: 2px solid var(--text-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Respetar preferencia de reducción de movimiento */
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* ─── Animaciones ───────────────────────────────────────────────────────────── */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes flicker {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  92% {
+    opacity: 1;
+  }
+
+  93% {
+    opacity: 0.85;
+  }
+
+  94% {
+    opacity: 1;
+  }
+
+  96% {
+    opacity: 0.9;
+  }
+
+  97% {
+    opacity: 1;
+  }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* ─── Utilidades terminal ───────────────────────────────────────────────────── */
+.terminal-border {
+  border: 1px solid var(--border-accent);
+  box-shadow: var(--glow-sm);
+}
+
+.terminal-border:hover {
+  border-color: var(--text-accent);
+  box-shadow: var(--glow-md);
+}
+
+.text-glow {
+  text-shadow: var(--glow-sm);
+}
+
+.text-glow-lg {
+  text-shadow: var(--glow-md);
+}
+
+/* Pseudo-terminal: prompt line prefix */
+.terminal-prompt::before {
+  content: '> ';
+  color: var(--text-accent);
+  opacity: 0.7;
+}
+
+/* Sección con línea decorativa lateral */
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+}
+
+.section-heading::before {
+  content: '//';
+  opacity: 0.5;
+}
+
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border-accent), transparent);
+}
