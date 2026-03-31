@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site:   'https://atarico.dev',
-  output: 'static',
+  output: 'server',
   adapter: vercel(),
   integrations: [sitemap()],
   vite: {
