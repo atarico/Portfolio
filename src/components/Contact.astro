@@ -234,7 +234,6 @@ const contactLinks: ContactLink[] = [
       });
 
       const data = await res.json();
-      console.log('Web3Forms response:', data);
 
       if (res.ok && data.success) {
         statusEl.textContent = '✓ Mensaje enviado correctamente.';
