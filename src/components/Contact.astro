@@ -1,6 +1,4 @@
 ---
-const FORMSPREE_URL = 'https://formspree.io/f/TU_ID';
-
 interface ContactLink {
   label: string;
   value: string;
@@ -77,8 +75,6 @@ const contactLinks: ContactLink[] = [
             </p>
 
             <form
-              action={FORMSPREE_URL}
-              method="POST"
               class="contact-form"
               novalidate
               id="contact-form"
@@ -223,10 +219,11 @@ const contactLinks: ContactLink[] = [
     statusEl.className = 'form-status';
 
     try {
-      const res = await fetch(form.action, {
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (res.ok) {
