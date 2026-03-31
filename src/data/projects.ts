@@ -36,7 +36,7 @@ export const projects: Project[] = [
       "Calculadora web de derivadas e integrales con resolución paso a paso. Ideal para estudiantes que quieren entender el proceso, no solo el resultado.",
     tech: ["react", "TypeScript", "mathjs", "Tailwind CSS", "Vite"],
     github: "https://github.com/atarico/calculadora-Analisis-Matematico",
-    demo: null,
+    demo: "https://cal-derivada-integrales.netlify.app/",
     featured: true,
   },
   {

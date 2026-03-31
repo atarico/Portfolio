@@ -145,29 +145,24 @@ const links = [
     });
   };
 
-  // Iniciar con 'hero' activo
-  setActive('hero');
+  // Altura del navbar fijo
+  const NAVBAR_HEIGHT = navbar.offsetHeight;
 
-  const sectionObserver = new IntersectionObserver(
-    (entries) => {
-      // Elegir la sección con mayor intersectionRatio
-      const visible = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-      if (visible.length > 0) {
-        const id = visible[0]!.target.getAttribute('id');
-        if (id) setActive(id);
+  const getActiveSection = () => {
+    let current = 'hero';
+    sections.forEach((section) => {
+      const top = section.getBoundingClientRect().top;
+      if (top <= NAVBAR_HEIGHT + 16) {
+        current = section.getAttribute('id') ?? current;
       }
-    },
-    {
-      // rootMargin: recorte superior para ignorar el navbar fijo
-      rootMargin: '-64px 0px -35% 0px',
-      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
-    }
-  );
+    });
+    return current;
+  };
 
-  sections.forEach((s) => sectionObserver.observe(s));
+  // Iniciar con la sección correcta
+  setActive(getActiveSection());
+
+  window.addEventListener('scroll', () => setActive(getActiveSection()), { passive: true });
 </script>
 
 <style>
