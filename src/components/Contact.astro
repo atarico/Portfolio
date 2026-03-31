@@ -219,11 +219,11 @@ const contactLinks: ContactLink[] = [
     statusEl.className = 'form-status';
 
     try {
-      const data = Object.fromEntries(new FormData(form));
-      const res = await fetch('/api/contact', {
+      const formData = new FormData(form);
+      formData.append('access_key', 'e6f7bde7-414f-43cb-bc78-69fcff3e21e2');
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
+        body: formData,
       });
 
       if (res.ok) {
