@@ -233,14 +233,17 @@ const contactLinks: ContactLink[] = [
         body: formData,
       });
 
-      if (res.ok) {
+      const data = await res.json();
+      console.log('Web3Forms response:', data);
+
+      if (res.ok && data.success) {
         statusEl.textContent = '✓ Mensaje enviado correctamente.';
         statusEl.classList.add('status-ok');
         form.reset();
         btnText.textContent = 'Enviar mensaje';
         submitBtn.disabled = false;
       } else {
-        throw new Error('server-error');
+        throw new Error(data.message ?? 'server-error');
       }
     } catch {
       statusEl.textContent = '✗ Error al enviar. Intentá de nuevo.';
