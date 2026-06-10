@@ -12,5 +12,10 @@ export default defineConfig({
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // CSP: script-src 'self' bloquea scripts inline; con 0, Astro
+      // emite siempre archivos .js externos en vez de inlinear <4KB
+      assetsInlineLimit: 0,
+    },
   },
 });
