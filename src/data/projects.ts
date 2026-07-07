@@ -20,6 +20,26 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    title: "Gestor de llaves UTN",
+    status: "Producción",
+    description:
+      "Un sistema de gestión diseñado específicamente para el control, préstamo y devolución de llaves en la Universidad Tecnológica Nacional (UTN). actualmente está en BETA ya que se siguen desarrollando nuevas funcionalidades.",
+    tech: ["react", "TypeScript", "Tailwind CSS", "Wouter"],
+    github: "https://github.com/atarico/utn-llaves",
+    demo: "https://llaves-utn.netlify.app/",
+    featured: true,
+  },
+  {
+    title: "Organización Duin",
+    status: "Producción",
+    description:
+      "Landing page para Organización Duin, agencia oficial del Grupo Sancor Seguros en San Nicolás. Sitio de una página con tarjetas de servicios apiladas, llamadas a la acción directas por WhatsApp y foco en SEO y accesibilidad. Construida con Astro puro, sin frameworks.",
+    tech: ["Astro", "CSS", "JavaScript", "vercel"],
+    github: null,
+    demo: "https://org-duin-sancor-seg.vercel.app/",
+    featured: true,
+  },
+  {
     title: "EP Cantina Entradas",
     status: "Producción",
     description:
@@ -37,26 +57,6 @@ export const projects: Project[] = [
     tech: ["react", "TypeScript", "mathjs", "Tailwind CSS", "Vite"],
     github: "https://github.com/atarico/calculadora-Analisis-Matematico",
     demo: "https://cal-derivada-integrales.netlify.app/",
-    featured: true,
-  },
-  {
-    title: "Gestor de llaves UTN",
-    status: "Producción",
-    description:
-      "Un sistema de gestión diseñado específicamente para el control, préstamo y devolución de llaves en la Universidad Tecnológica Nacional (UTN). actualmente está en BETA ya que se siguen desarrollando nuevas funcionalidades.",
-    tech: ["react", "TypeScript", "Tailwind CSS", "Wouter"],
-    github: "https://github.com/atarico/utn-llaves",
-    demo: "https://llaves-utn.netlify.app/",
-    featured: true,
-  },
-  {
-    title: "Donde Tocar",
-    status: "En desarrollo",
-    description:
-      "Plataforma para músicos que buscan bares y centros culturales donde tocar en Argentina. Incluye búsqueda por ciudad, modelado de datos complejo y optimización SEO.",
-    tech: ["Astro", "Tailwind CSS", "Supabase", "TypeScript"],
-    github: "https://github.com/atarico/donde-tocar",
-    demo: null,
     featured: true,
   },
   {
