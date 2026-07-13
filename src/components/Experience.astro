@@ -112,18 +112,8 @@ const fakeHashes = ['a3f9c12', 'e81b047', 'c502fd9', '7d3ae61'];
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
+  /* .section-label y .label-prefix viven en global.css */
   .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
     font-weight: 700;
   }
 
@@ -136,8 +126,7 @@ const fakeHashes = ['a3f9c12', 'e81b047', 'c502fd9', '7d3ae61'];
     letter-spacing: 0.06em;
   }
 
-  .meta-count { color: var(--text-accent); opacity: 0.7; }
-  .meta-sep   { opacity: 0.3; }
+  /* .meta-count y .meta-sep viven en global.css */
 
   /* ── Timeline ── */
   .timeline {
@@ -326,24 +315,7 @@ const fakeHashes = ['a3f9c12', 'e81b047', 'c502fd9', '7d3ae61'];
     background: rgba(0, 255, 65, 0.04);
   }
 
-  /* ── Reveal ──
-     El estado oculto solo aplica con <html class="js">: sin JS el contenido
-     queda visible (progressive enhancement) */
-  .reveal {
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(html.js) .reveal {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  :global(html.js) .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* ── Reveal: reglas compartidas en global.css ── */
 
   /* ── Mobile: simplificar timeline ── */
   @media (max-width: 480px) {
