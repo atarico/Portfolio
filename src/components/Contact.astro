@@ -38,8 +38,10 @@ const contactLinks: ContactLink[] = [
 ];
 ---
 
-<section id="contact" class="contact-section">
+<section id="contact" class="contact-section" aria-labelledby="contact-title">
   <div class="contact-inner">
+
+    <h2 id="contact-title" class="sr-only">Contacto</h2>
 
     <!-- ── Título terminal ── -->
     <header class="contact-header reveal">
@@ -631,7 +633,6 @@ const contactLinks: ContactLink[] = [
   .info-footer {
     font-size: 0.7rem;
     color: var(--text-muted);
-    opacity: 0.5;
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -639,7 +640,7 @@ const contactLinks: ContactLink[] = [
 
   .info-comment {
     color: var(--text-accent);
-    opacity: 0.4;
+    opacity: 0.6;
   }
 
   /* ── Reveal: reglas compartidas en global.css ── */
