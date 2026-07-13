@@ -29,6 +29,10 @@ const ogImageURL   = new URL(ogImage, Astro.site ?? 'https://atarico.dev');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
+    <!-- Marca <html class="js"> lo antes posible: el CSS de reveal solo oculta
+         contenido cuando JS está disponible (progressive enhancement) -->
+    <script src="/js-detect.js" is:inline></script>
+
     <!-- SEO primario -->
     <title>{title}</title>
     <meta name="description"  content={description} />

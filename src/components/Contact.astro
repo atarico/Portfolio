@@ -586,13 +586,14 @@ const contactLinks: ContactLink[] = [
     gap: 0.1rem;
   }
 
-  .info-item {
+  /* La animación de los items solo se activa cuando hay JS disponible */
+  :global(html.js) .info-item {
     opacity: 0;
     animation: slideIn 0.4s ease forwards;
   }
 
   /* Solo anima cuando el padre es visible */
-  .reveal:not(.is-visible) .info-item {
+  :global(html.js) .reveal:not(.is-visible) .info-item {
     animation: none;
   }
 
@@ -671,16 +672,21 @@ const contactLinks: ContactLink[] = [
     opacity: 0.4;
   }
 
-  /* ── Reveal ── */
+  /* ── Reveal ──
+     El estado oculto solo aplica con <html class="js">: sin JS el contenido
+     queda visible (progressive enhancement) */
   .reveal {
-    opacity: 0;
-    transform: translateY(18px);
     transition:
       opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .reveal.is-visible {
+  :global(html.js) .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  :global(html.js) .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
