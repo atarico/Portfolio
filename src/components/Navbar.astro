@@ -85,15 +85,6 @@ const links = [
   const bars       = navbar.querySelectorAll<HTMLElement>('.hamburger-bar');
 
   /* ────────────────────────────────────────────────
-   * Scroll: fondo semi-transparente al bajar
-   * ──────────────────────────────────────────────── */
-  const onScroll = () => {
-    navbar.classList.toggle('navbar-scrolled', window.scrollY > 30);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  /* ────────────────────────────────────────────────
    * Hamburger menu
    * ──────────────────────────────────────────────── */
   let open = false;
@@ -145,24 +136,50 @@ const links = [
     });
   };
 
-  // Altura del navbar fijo
-  const NAVBAR_HEIGHT = navbar.offsetHeight;
+  // Altura del navbar fijo (se recalcula al redimensionar)
+  let navbarHeight = navbar.offsetHeight;
+  window.addEventListener('resize', () => {
+    navbarHeight = navbar.offsetHeight;
+  }, { passive: true });
 
   const getActiveSection = () => {
     let current = 'hero';
     sections.forEach((section) => {
       const top = section.getBoundingClientRect().top;
-      if (top <= NAVBAR_HEIGHT + 16) {
+      if (top <= navbarHeight + 16) {
         current = section.getAttribute('id') ?? current;
       }
     });
     return current;
   };
 
-  // Iniciar con la sección correcta
-  setActive(getActiveSection());
+  /* ────────────────────────────────────────────────
+   * Scroll: fondo semi-transparente + scrollspy.
+   * Un solo listener, throttled con requestAnimationFrame.
+   * ──────────────────────────────────────────────── */
+  let lastActive = '';
 
-  window.addEventListener('scroll', () => setActive(getActiveSection()), { passive: true });
+  const onScroll = () => {
+    navbar.classList.toggle('navbar-scrolled', window.scrollY > 30);
+    const current = getActiveSection();
+    if (current !== lastActive) {
+      lastActive = current;
+      setActive(current);
+    }
+  };
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      onScroll();
+      ticking = false;
+    });
+  }, { passive: true });
+
+  // Estado inicial correcto sin esperar al primer scroll
+  onScroll();
 </script>
 
 <style>
