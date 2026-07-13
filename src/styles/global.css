@@ -39,6 +39,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
