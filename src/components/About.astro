@@ -163,7 +163,11 @@ const stats: Stat[] = [
     gap: 0.25rem;
   }
 
-  /* .section-label y .label-prefix viven en global.css */
+  /* .section-label y .label-prefix viven en global.css.
+     About es la única sección con el prefijo sin bold. */
+  .label-prefix {
+    font-weight: 400;
+  }
 
   /* ── Grid ── */
   .about-grid {

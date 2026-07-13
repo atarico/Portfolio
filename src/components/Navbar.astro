@@ -128,7 +128,7 @@ const links = [
   });
 
   /* ────────────────────────────────────────────────
-   * Active section via IntersectionObserver
+   * Scrollspy: sección activa según posición de scroll
    * ──────────────────────────────────────────────── */
   const sections    = document.querySelectorAll<HTMLElement>('section[id]');
   const desktopLinks = navbar.querySelectorAll<HTMLAnchorElement>('.nav-link');
@@ -143,11 +143,8 @@ const links = [
     });
   };
 
-  // Altura del navbar fijo (se recalcula al redimensionar)
+  // Altura del navbar fijo (se recalcula al redimensionar, ver listener abajo)
   let navbarHeight = navbar.offsetHeight;
-  window.addEventListener('resize', () => {
-    navbarHeight = navbar.offsetHeight;
-  }, { passive: true });
 
   const getActiveSection = () => {
     let current = 'hero';
@@ -183,6 +180,16 @@ const links = [
       onScroll();
       ticking = false;
     });
+  }, { passive: true });
+
+  // Al redimensionar: recalcular la altura del navbar, cerrar el menú mobile
+  // si se pasa al layout desktop (el CSS lo oculta en md pero el body quedaría
+  // sin scroll) y refrescar el scrollspy sin esperar al próximo scroll.
+  // 768px = breakpoint `md` de Tailwind, el mismo que oculta el menú.
+  window.addEventListener('resize', () => {
+    navbarHeight = navbar.offsetHeight;
+    if (window.innerWidth >= 768) closeMenu();
+    onScroll();
   }, { passive: true });
 
   // Estado inicial correcto sin esperar al primer scroll
