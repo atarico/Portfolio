@@ -39,6 +39,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* Compensa el navbar fijo en los anchors. Acoplado a la altura real de
+       #navbar (Navbar.astro): si cambia su padding/tipografía, ajustar acá. */
     scroll-padding-top: 5rem;
     background-color: var(--bg-primary);
     color: var(--text-primary);
@@ -158,6 +160,7 @@
 .label-prefix {
   color: var(--text-accent);
   text-shadow: var(--glow-sm);
+  font-weight: 700;
 }
 
 .meta-count {

@@ -34,7 +34,7 @@ const ogImageURL   = new URL(ogImage, Astro.site ?? 'https://atarico.dev');
          contenido cuando JS está disponible (progressive enhancement) -->
     <script src="/js-detect.js" is:inline></script>
 
-    <!-- Preload the primary font to avoid the visible swap (FOUT) -->
+    <!-- Precarga de la fuente principal para evitar el flash de swap (FOUT) -->
     <link
       rel="preload"
       as="font"
