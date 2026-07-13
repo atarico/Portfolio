@@ -143,18 +143,8 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
+  /* .section-label y .label-prefix viven en global.css */
   .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
     font-weight: 700;
   }
 
@@ -167,14 +157,7 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     letter-spacing: 0.06em;
   }
 
-  .meta-count {
-    color: var(--text-accent);
-    opacity: 0.7;
-  }
-
-  .meta-sep {
-    opacity: 0.3;
-  }
+  /* .meta-count y .meta-sep viven en global.css */
 
   /* ── Grid ── */
   .projects-grid {
@@ -404,22 +387,14 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     pointer-events: none;
   }
 
-  /* ── Reveal: IntersectionObserver ──
-     El estado oculto solo aplica con <html class="js">: sin JS el contenido
-     queda visible (progressive enhancement) */
-  .reveal {
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(html.js) .reveal {
-    opacity: 0;
+  /* ── Reveal: base compartida en global.css ──
+     Variación local: desplazamiento de 20px. Los selectores con #projects
+     ganan en especificidad a la base global. */
+  :global(html.js) #projects .reveal {
     transform: translateY(20px);
   }
 
-  :global(html.js) .reveal.is-visible {
-    opacity: 1;
+  :global(html.js) #projects .reveal.is-visible {
     transform: translateY(0);
   }
 </style>

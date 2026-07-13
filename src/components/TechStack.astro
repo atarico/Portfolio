@@ -152,18 +152,8 @@ const categories: Category[] = [
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
+  /* .section-label y .label-prefix viven en global.css */
   .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
     font-weight: 700;
   }
 
@@ -176,8 +166,7 @@ const categories: Category[] = [
     letter-spacing: 0.06em;
   }
 
-  .meta-count { color: var(--text-accent); opacity: 0.7; }
-  .meta-sep   { opacity: 0.3; }
+  /* .meta-count y .meta-sep viven en global.css */
 
   /* ── Grid de categorías ── */
   .tech-grid {
@@ -283,24 +272,6 @@ const categories: Category[] = [
     text-shadow: var(--glow-sm);
   }
 
-  /* Barra de nivel ████░░ */
-  .skill-bar {
-    font-size: 0.58rem;
-    letter-spacing: -0.05em;
-    color: var(--text-muted);
-    opacity: 0.5;
-    user-select: none;
-    white-space: nowrap;
-    transition: color 0.2s ease, opacity 0.2s ease;
-    line-height: 1;
-    padding-top: 0.1em;
-  }
-
-  .skill-row:hover .skill-bar {
-    color: var(--text-accent);
-    opacity: 0.75;
-  }
-
   /* ── Footer de la card ── */
   .card-footer {
     display: flex;
@@ -321,22 +292,5 @@ const categories: Category[] = [
     letter-spacing: 0.04em;
   }
 
-  /* ── Reveal ──
-     El estado oculto solo aplica con <html class="js">: sin JS el contenido
-     queda visible (progressive enhancement) */
-  .reveal {
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(html.js) .reveal {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  :global(html.js) .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* ── Reveal: reglas compartidas en global.css ── */
 </style>

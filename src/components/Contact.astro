@@ -313,18 +313,8 @@ const contactLinks: ContactLink[] = [
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
+  /* .section-label y .label-prefix viven en global.css */
   .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
     font-weight: 700;
   }
 
@@ -338,7 +328,7 @@ const contactLinks: ContactLink[] = [
   }
 
   .meta-ok  { color: var(--text-accent); opacity: 0.8; }
-  .meta-sep { opacity: 0.3; }
+  /* .meta-sep vive en global.css */
 
   /* ── Grid ── */
   .contact-grid {
@@ -363,27 +353,7 @@ const contactLinks: ContactLink[] = [
     box-shadow: var(--glow-sm), 0 12px 36px rgba(0, 0, 0, 0.45);
   }
 
-  .terminal-titlebar {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.65rem 1rem;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-accent);
-    user-select: none;
-  }
-
-  .dot {
-    display: block;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .dot-red    { background: #ff5f57; }
-  .dot-yellow { background: #febc2e; }
-  .dot-green  { background: #28c840; }
+  /* .terminal-titlebar y .dot* viven en global.css */
 
   .terminal-title {
     margin-left: 0.5rem;
@@ -672,24 +642,7 @@ const contactLinks: ContactLink[] = [
     opacity: 0.4;
   }
 
-  /* ── Reveal ──
-     El estado oculto solo aplica con <html class="js">: sin JS el contenido
-     queda visible (progressive enhancement) */
-  .reveal {
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :global(html.js) .reveal {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  :global(html.js) .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* ── Reveal: reglas compartidas en global.css ── */
 
   /* ── Mobile ── */
   @media (max-width: 480px) {
