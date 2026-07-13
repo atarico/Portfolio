@@ -94,6 +94,7 @@ const links = [
     open = false;
     toggle.setAttribute('aria-expanded', 'false');
     mobileMenu.classList.add('hidden');
+    document.body.style.overflow = '';
     bars[0]!.style.transform = '';
     bars[1]!.style.opacity   = '1';
     bars[2]!.style.transform = '';
@@ -103,12 +104,18 @@ const links = [
     open = true;
     toggle.setAttribute('aria-expanded', 'true');
     mobileMenu.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
     bars[0]!.style.transform = 'translateY(6px) rotate(45deg)';
     bars[1]!.style.opacity   = '0';
     bars[2]!.style.transform = 'translateY(-6px) rotate(-45deg)';
   };
 
   toggle.addEventListener('click', () => (open ? closeMenu() : openMenu()));
+
+  // Cerrar al hacer click/tap fuera del navbar
+  document.addEventListener('click', (e) => {
+    if (open && !navbar.contains(e.target as Node)) closeMenu();
+  });
 
   // Cerrar al hacer click en un link del menú mobile
   mobileMenu.querySelectorAll('.mobile-link').forEach(link =>
