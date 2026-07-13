@@ -2,6 +2,7 @@
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
+import jetbrainsMono400Url from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url';
 import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
@@ -32,6 +33,15 @@ const ogImageURL   = new URL(ogImage, Astro.site ?? 'https://atarico.dev');
     <!-- Marca <html class="js"> lo antes posible: el CSS de reveal solo oculta
          contenido cuando JS está disponible (progressive enhancement) -->
     <script src="/js-detect.js" is:inline></script>
+
+    <!-- Preload the primary font to avoid the visible swap (FOUT) -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={jetbrainsMono400Url}
+      crossorigin
+    />
 
     <!-- SEO primario -->
     <title>{title}</title>
