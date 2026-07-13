@@ -321,16 +321,21 @@ const categories: Category[] = [
     letter-spacing: 0.04em;
   }
 
-  /* ── Reveal ── */
+  /* ── Reveal ──
+     El estado oculto solo aplica con <html class="js">: sin JS el contenido
+     queda visible (progressive enhancement) */
   .reveal {
-    opacity: 0;
-    transform: translateY(18px);
     transition:
       opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .reveal.is-visible {
+  :global(html.js) .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  :global(html.js) .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
