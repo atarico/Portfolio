@@ -209,3 +209,12 @@ html.js .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Con reduced-motion el contenido nunca depende del observer para verse.
+   !important para ganarle a los overrides por sección (html.js #about .reveal…) */
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

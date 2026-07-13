@@ -53,8 +53,10 @@ const categories: Category[] = [
 
 ---
 
-<section id="tech" class="tech-section">
+<section id="tech" class="tech-section" aria-labelledby="tech-title">
   <div class="tech-inner">
+
+    <h2 id="tech-title" class="sr-only">Skills</h2>
 
     <!-- ── Título terminal ── -->
     <header class="tech-header reveal">
@@ -280,7 +282,6 @@ const categories: Category[] = [
     padding: 0.55rem 0.9rem 0.75rem;
     font-size: 0.65rem;
     color: var(--text-muted);
-    opacity: 0.5;
     user-select: none;
   }
 
