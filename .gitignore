@@ -29,4 +29,6 @@ pnpm-debug.log*
 
 # agent files
 .gga
+.atl
+.claude
 AGENTS.md
