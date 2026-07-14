@@ -85,15 +85,6 @@ const links = [
   const bars       = navbar.querySelectorAll<HTMLElement>('.hamburger-bar');
 
   /* ────────────────────────────────────────────────
-   * Scroll: fondo semi-transparente al bajar
-   * ──────────────────────────────────────────────── */
-  const onScroll = () => {
-    navbar.classList.toggle('navbar-scrolled', window.scrollY > 30);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  /* ────────────────────────────────────────────────
    * Hamburger menu
    * ──────────────────────────────────────────────── */
   let open = false;
@@ -103,6 +94,7 @@ const links = [
     open = false;
     toggle.setAttribute('aria-expanded', 'false');
     mobileMenu.classList.add('hidden');
+    document.body.style.overflow = '';
     bars[0]!.style.transform = '';
     bars[1]!.style.opacity   = '1';
     bars[2]!.style.transform = '';
@@ -112,12 +104,18 @@ const links = [
     open = true;
     toggle.setAttribute('aria-expanded', 'true');
     mobileMenu.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
     bars[0]!.style.transform = 'translateY(6px) rotate(45deg)';
     bars[1]!.style.opacity   = '0';
     bars[2]!.style.transform = 'translateY(-6px) rotate(-45deg)';
   };
 
   toggle.addEventListener('click', () => (open ? closeMenu() : openMenu()));
+
+  // Cerrar al hacer click/tap fuera del navbar
+  document.addEventListener('click', (e) => {
+    if (open && !navbar.contains(e.target as Node)) closeMenu();
+  });
 
   // Cerrar al hacer click en un link del menú mobile
   mobileMenu.querySelectorAll('.mobile-link').forEach(link =>
@@ -130,7 +128,7 @@ const links = [
   });
 
   /* ────────────────────────────────────────────────
-   * Active section via IntersectionObserver
+   * Scrollspy: sección activa según posición de scroll
    * ──────────────────────────────────────────────── */
   const sections    = document.querySelectorAll<HTMLElement>('section[id]');
   const desktopLinks = navbar.querySelectorAll<HTMLAnchorElement>('.nav-link');
@@ -145,24 +143,64 @@ const links = [
     });
   };
 
-  // Altura del navbar fijo
-  const NAVBAR_HEIGHT = navbar.offsetHeight;
-
   const getActiveSection = () => {
+    // Si llegamos al final de la página, la última sección es la activa aunque
+    // su top no haya cruzado la línea de referencia (secciones cortas al pie).
+    const scrolledToBottom =
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    if (scrolledToBottom) {
+      return sections[sections.length - 1]?.getAttribute('id') ?? 'hero';
+    }
+
+    // Línea de referencia en el centro del viewport: una sección se marca activa
+    // cuando su top la cruza, es decir, cuando ya domina lo que el usuario ve.
+    // Robusto tanto para secciones cortas como más altas que el viewport.
+    const line = window.innerHeight / 2;
     let current = 'hero';
     sections.forEach((section) => {
-      const top = section.getBoundingClientRect().top;
-      if (top <= NAVBAR_HEIGHT + 16) {
+      if (section.getBoundingClientRect().top <= line) {
         current = section.getAttribute('id') ?? current;
       }
     });
     return current;
   };
 
-  // Iniciar con la sección correcta
-  setActive(getActiveSection());
+  /* ────────────────────────────────────────────────
+   * Scroll: fondo semi-transparente + scrollspy.
+   * Un solo listener, throttled con requestAnimationFrame.
+   * ──────────────────────────────────────────────── */
+  let lastActive = '';
 
-  window.addEventListener('scroll', () => setActive(getActiveSection()), { passive: true });
+  const onScroll = () => {
+    navbar.classList.toggle('navbar-scrolled', window.scrollY > 30);
+    const current = getActiveSection();
+    if (current !== lastActive) {
+      lastActive = current;
+      setActive(current);
+    }
+  };
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      onScroll();
+      ticking = false;
+    });
+  }, { passive: true });
+
+  // Al redimensionar: cerrar el menú mobile si se pasa al layout desktop (el CSS
+  // lo oculta en md pero el body quedaría sin scroll) y refrescar el scrollspy
+  // sin esperar al próximo scroll.
+  // 768px = breakpoint `md` de Tailwind, el mismo que oculta el menú.
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) closeMenu();
+    onScroll();
+  }, { passive: true });
+
+  // Estado inicial correcto sin esperar al primer scroll
+  onScroll();
 </script>
 
 <style>

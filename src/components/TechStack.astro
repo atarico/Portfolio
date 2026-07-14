@@ -16,10 +16,10 @@ const categories: Category[] = [
     label: 'frontend',
     pkg: 'frontend@latest',
     skills: [
+      { name: 'TypeScript',         },
       { name: 'React.js',           },
       { name: 'Astro.js',           },
       { name: 'Next.js',            },
-      { name: 'TypeScript',         },
       { name: 'JavaScript (ES6+)',  },
       { name: 'HTML5',              },
       { name: 'CSS3',               },
@@ -35,6 +35,7 @@ const categories: Category[] = [
       { name: 'Supabase',   },
       { name: 'C#',         },
       { name: 'REST APIs',  },
+      { name: 'SQL',        },
     ],
   },
   {
@@ -44,8 +45,9 @@ const categories: Category[] = [
     skills: [
       { name: 'Git',    },
       { name: 'GitHub', },
-      { name: 'Scrum',  },
       { name: 'pnpm',   },
+      { name: 'Vercel', },
+      { name: 'Scrum',  },
     ],
   },
 ];
@@ -53,8 +55,10 @@ const categories: Category[] = [
 
 ---
 
-<section id="tech" class="tech-section">
+<section id="tech" class="tech-section" aria-labelledby="tech-title">
   <div class="tech-inner">
+
+    <h2 id="tech-title" class="sr-only">Skills</h2>
 
     <!-- ── Título terminal ── -->
     <header class="tech-header reveal">
@@ -152,20 +156,7 @@ const categories: Category[] = [
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
-    font-weight: 700;
-  }
+  /* .section-label y .label-prefix viven en global.css */
 
   .section-meta {
     font-size: 0.9rem;
@@ -176,8 +167,7 @@ const categories: Category[] = [
     letter-spacing: 0.06em;
   }
 
-  .meta-count { color: var(--text-accent); opacity: 0.7; }
-  .meta-sep   { opacity: 0.3; }
+  /* .meta-count y .meta-sep viven en global.css */
 
   /* ── Grid de categorías ── */
   .tech-grid {
@@ -283,24 +273,6 @@ const categories: Category[] = [
     text-shadow: var(--glow-sm);
   }
 
-  /* Barra de nivel ████░░ */
-  .skill-bar {
-    font-size: 0.58rem;
-    letter-spacing: -0.05em;
-    color: var(--text-muted);
-    opacity: 0.5;
-    user-select: none;
-    white-space: nowrap;
-    transition: color 0.2s ease, opacity 0.2s ease;
-    line-height: 1;
-    padding-top: 0.1em;
-  }
-
-  .skill-row:hover .skill-bar {
-    color: var(--text-accent);
-    opacity: 0.75;
-  }
-
   /* ── Footer de la card ── */
   .card-footer {
     display: flex;
@@ -309,7 +281,6 @@ const categories: Category[] = [
     padding: 0.55rem 0.9rem 0.75rem;
     font-size: 0.65rem;
     color: var(--text-muted);
-    opacity: 0.5;
     user-select: none;
   }
 
@@ -321,17 +292,5 @@ const categories: Category[] = [
     letter-spacing: 0.04em;
   }
 
-  /* ── Reveal ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* ── Reveal: reglas compartidas en global.css ── */
 </style>

@@ -38,8 +38,10 @@ const contactLinks: ContactLink[] = [
 ];
 ---
 
-<section id="contact" class="contact-section">
+<section id="contact" class="contact-section" aria-labelledby="contact-title">
   <div class="contact-inner">
+
+    <h2 id="contact-title" class="sr-only">Contacto</h2>
 
     <!-- ── Título terminal ── -->
     <header class="contact-header reveal">
@@ -313,20 +315,7 @@ const contactLinks: ContactLink[] = [
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
-    font-weight: 700;
-  }
+  /* .section-label y .label-prefix viven en global.css */
 
   .section-meta {
     font-size: 0.9rem;
@@ -338,7 +327,7 @@ const contactLinks: ContactLink[] = [
   }
 
   .meta-ok  { color: var(--text-accent); opacity: 0.8; }
-  .meta-sep { opacity: 0.3; }
+  /* .meta-sep vive en global.css */
 
   /* ── Grid ── */
   .contact-grid {
@@ -363,27 +352,7 @@ const contactLinks: ContactLink[] = [
     box-shadow: var(--glow-sm), 0 12px 36px rgba(0, 0, 0, 0.45);
   }
 
-  .terminal-titlebar {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.65rem 1rem;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-accent);
-    user-select: none;
-  }
-
-  .dot {
-    display: block;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .dot-red    { background: #ff5f57; }
-  .dot-yellow { background: #febc2e; }
-  .dot-green  { background: #28c840; }
+  /* .terminal-titlebar y .dot* viven en global.css */
 
   .terminal-title {
     margin-left: 0.5rem;
@@ -586,13 +555,14 @@ const contactLinks: ContactLink[] = [
     gap: 0.1rem;
   }
 
-  .info-item {
+  /* La animación de los items solo se activa cuando hay JS disponible */
+  :global(html.js) .info-item {
     opacity: 0;
     animation: slideIn 0.4s ease forwards;
   }
 
   /* Solo anima cuando el padre es visible */
-  .reveal:not(.is-visible) .info-item {
+  :global(html.js) .reveal:not(.is-visible) .info-item {
     animation: none;
   }
 
@@ -660,7 +630,6 @@ const contactLinks: ContactLink[] = [
   .info-footer {
     font-size: 0.7rem;
     color: var(--text-muted);
-    opacity: 0.5;
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -668,22 +637,10 @@ const contactLinks: ContactLink[] = [
 
   .info-comment {
     color: var(--text-accent);
-    opacity: 0.4;
+    opacity: 0.6;
   }
 
-  /* ── Reveal ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* ── Reveal: reglas compartidas en global.css ── */
 
   /* ── Mobile ── */
   @media (max-width: 480px) {

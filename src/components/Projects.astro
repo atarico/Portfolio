@@ -6,8 +6,10 @@ const ICON_GITHUB = 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.5
 const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
 ---
 
-<section id="projects" class="projects-section">
+<section id="projects" class="projects-section" aria-labelledby="projects-title">
   <div class="projects-inner">
+
+    <h2 id="projects-title" class="sr-only">Proyectos</h2>
 
     <!-- ── Título terminal ── -->
     <header class="projects-header reveal">
@@ -143,20 +145,7 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     gap: 0.4rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
-    font-weight: 700;
-  }
+  /* .section-label y .label-prefix viven en global.css */
 
   .section-meta {
     font-size: 0.9rem;
@@ -167,14 +156,7 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     letter-spacing: 0.06em;
   }
 
-  .meta-count {
-    color: var(--text-accent);
-    opacity: 0.7;
-  }
-
-  .meta-sep {
-    opacity: 0.3;
-  }
+  /* .meta-count y .meta-sep viven en global.css */
 
   /* ── Grid ── */
   .projects-grid {
@@ -204,7 +186,6 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
       border-color 0.25s ease,
       box-shadow   0.25s ease,
       transform    0.25s ease;
-    will-change: transform;
   }
 
   .project-card:hover {
@@ -405,17 +386,14 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     pointer-events: none;
   }
 
-  /* ── Reveal: IntersectionObserver ── */
-  .reveal {
-    opacity: 0;
+  /* ── Reveal: base compartida en global.css ──
+     Variación local: desplazamiento de 20px. Los selectores con #projects
+     ganan en especificidad a la base global. */
+  :global(html.js) #projects .reveal {
     transform: translateY(20px);
-    transition:
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .reveal.is-visible {
-    opacity: 1;
+  :global(html.js) #projects .reveal.is-visible {
     transform: translateY(0);
   }
 </style>

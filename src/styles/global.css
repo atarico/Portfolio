@@ -39,6 +39,9 @@
 
   html {
     scroll-behavior: smooth;
+    /* Compensa el navbar fijo en los anchors. Acoplado a la altura real de
+       #navbar (Navbar.astro): si cambia su padding/tipografía, ajustar acá. */
+    scroll-padding-top: 5rem;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
@@ -48,7 +51,7 @@
   }
 
   body {
-    min-height: 100vh;
+    min-height: 100dvh;
     line-height: 1.7;
     background-color: var(--bg-primary);
   }
@@ -135,94 +138,94 @@
   }
 }
 
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-
-  100% {
-    transform: translateY(100vh);
-  }
-}
-
-@keyframes flicker {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  92% {
-    opacity: 1;
-  }
-
-  93% {
-    opacity: 0.85;
-  }
-
-  94% {
-    opacity: 1;
-  }
-
-  96% {
-    opacity: 0.9;
-  }
-
-  97% {
-    opacity: 1;
-  }
-}
-
 .cursor-blink {
   animation: blink 1s step-end infinite;
 }
 
 /* ─── Utilidades terminal ───────────────────────────────────────────────────── */
-.terminal-border {
-  border: 1px solid var(--border-accent);
-  box-shadow: var(--glow-sm);
-}
-
-.terminal-border:hover {
-  border-color: var(--text-accent);
-  box-shadow: var(--glow-md);
-}
-
 .text-glow {
   text-shadow: var(--glow-sm);
 }
 
-.text-glow-lg {
-  text-shadow: var(--glow-md);
+/* ─── Estilos compartidos entre secciones ───────────────────────────────────── */
+.section-label {
+  font-size: 1.5rem;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-/* Pseudo-terminal: prompt line prefix */
-.terminal-prompt::before {
-  content: '> ';
+.label-prefix {
+  color: var(--text-accent);
+  text-shadow: var(--glow-sm);
+  font-weight: 700;
+}
+
+.meta-count {
   color: var(--text-accent);
   opacity: 0.7;
 }
 
-/* Sección con línea decorativa lateral */
-.section-heading {
+.meta-sep {
+  opacity: 0.3;
+}
+
+.terminal-titlebar {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  color: var(--text-accent);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 2.5rem;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-accent);
+  user-select: none;
 }
 
-.section-heading::before {
-  content: '//';
-  opacity: 0.5;
+.dot {
+  display: block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.section-heading::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, var(--border-accent), transparent);
+.dot-red {
+  background: #ff5f57;
+}
+
+.dot-yellow {
+  background: #febc2e;
+}
+
+.dot-green {
+  background: #28c840;
+}
+
+/* ─── Reveal-on-scroll ──────────────────────────────────────────────────────────
+   El estado oculto solo aplica con JS disponible (html.js): sin JS el contenido
+   queda visible (progressive enhancement). */
+.reveal {
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Con reduced-motion el contenido nunca depende del observer para verse.
+   !important para ganarle a los overrides por sección (html.js #about .reveal…) */
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

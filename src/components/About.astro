@@ -7,16 +7,18 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { key: 'ubicación',   value: 'Buenos Aires, Argentina' },
-  { key: 'rol_actual',  value: 'Profesor UTN + Dev'       },
+  { key: 'ubicación',   value: 'Buenos Aires, Argentina'  },
+  { key: 'rol_actual',  value: 'Frontend Dev'             },
   { key: 'stack',       value: stack                      },
   { key: 'educación',   value: 'Ing. Sistemas (en curso)' },
   { key: 'café_por_día', value: 3                         },
 ];
 ---
 
-<section id="about" class="about-section">
+<section id="about" class="about-section" aria-labelledby="about-title">
   <div class="about-inner">
+
+    <h2 id="about-title" class="sr-only">Sobre mí</h2>
 
     <!-- ── Título terminal ── -->
     <header class="about-header reveal">
@@ -25,7 +27,6 @@ const stats: Stat[] = [
       </p>
     </header>
 
-    <h2 class="about-title">Sobre mí</h2>
     <!-- ── Grid dos columnas ── -->
     <div class="about-grid">
 
@@ -35,18 +36,21 @@ const stats: Stat[] = [
         <p class="about-paragraph">
           Soy desarrollador web enfocado en el ecosistema
           JavaScript/TypeScript. Actualmente curso Ingeniería en Sistemas en
-          la UTN y soy profesor de Programación III en la Tecnicatura Superior
+          la UTN y fui profesor de Programación III en la Tecnicatura Superior
           en Programación de la misma universidad.
         </p>
 
         <p class="about-paragraph">
-          Mi experiencia docente me dio una buenas buenas habilidades de oratoria para una comunicación efectiva en equipos de desarrollo y tratar de explicar arquitecturas complejas de forma simple para que todos puedan entenderlas. 
+          Dar clases me entrenó para explicar cosas complejas de manera
+          simple. Eso mismo aplico en los equipos donde trabajo: comunicar
+          decisiones técnicas sin vueltas.
         </p>
 
         <p class="about-paragraph">
-          Trabajo con React, Astro, Next.js, Node.js y Supabase. Me gusta
-          crear herramientas que resuelvan problemas reales — desde apps de
-          geolocalización hasta sistemas de gestión de eventos.
+          Trabajo con React, Astro, Next.js, Node.js y Supabase. Lo que más
+          disfruto es llevar ideas a producción: una app de geolocalización
+          de farmacias, un sistema de entradas para un centro cultural, un
+          gestor de llaves para la UTN, una web para un broker de seguros.
         </p>
       </div>
 
@@ -160,18 +164,10 @@ const stats: Stat[] = [
     gap: 0.25rem;
   }
 
-  .section-label {
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
+  /* .section-label y .label-prefix viven en global.css.
+     About es la única sección con el prefijo sin bold. */
   .label-prefix {
-    color: var(--text-accent);
-    text-shadow: var(--glow-sm);
+    font-weight: 400;
   }
 
   /* ── Grid ── */
@@ -190,26 +186,6 @@ const stats: Stat[] = [
   }
 
   /* ── Texto del perfil ── */
-  .about-title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--text-primary);
-    position: relative;
-    padding-left: 1rem;
-  }
-
-  .about-title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.15em;
-    bottom: 0.15em;
-    width: 3px;
-    background: var(--text-accent);
-    box-shadow: var(--glow-sm);
-    border-radius: 2px;
-  }
-
   .about-paragraph {
     font-size: clamp(1rem, 2vw, 1.1rem);
     color: var(--text-muted);
@@ -230,28 +206,7 @@ const stats: Stat[] = [
     font-size: 0.82rem;
   }
 
-  /* Barra de título */
-  .terminal-titlebar {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.65rem 1rem;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-accent);
-    user-select: none;
-  }
-
-  .dot {
-    display: block;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .dot-red    { background: #ff5f57; }
-  .dot-yellow { background: #febc2e; }
-  .dot-green  { background: #28c840; }
+  /* .terminal-titlebar y .dot* viven en global.css */
 
   .terminal-title {
     margin-left: 0.5rem;
@@ -292,6 +247,10 @@ const stats: Stat[] = [
     flex-wrap: wrap;
     align-items: baseline;
     padding-left: 1.2rem;
+  }
+
+  /* La animación de props solo se activa cuando hay JS disponible */
+  :global(html.js) .t-prop {
     opacity: 0;
     animation: propReveal 0.4s ease forwards;
   }
@@ -320,17 +279,20 @@ const stats: Stat[] = [
     box-shadow: var(--glow-sm);
   }
 
-  /* ── Reveal: IntersectionObserver ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(22px);
+  /* ── Reveal: base compartida en global.css ──
+     Variación local: transición más lenta y desplazamiento más amplio.
+     Los selectores con #about ganan en especificidad a la base global. */
+  #about .reveal {
     transition:
       opacity  0.6s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .reveal.is-visible {
-    opacity: 1;
+  :global(html.js) #about .reveal {
+    transform: translateY(22px);
+  }
+
+  :global(html.js) #about .reveal.is-visible {
     transform: translateY(0);
   }
 
@@ -341,7 +303,7 @@ const stats: Stat[] = [
   }
 
   /* El trigger de propReveal arranca solo cuando la ventana es visible */
-  .reveal:not(.is-visible) .t-prop {
+  :global(html.js) .reveal:not(.is-visible) .t-prop {
     animation: none;
   }
 </style>
