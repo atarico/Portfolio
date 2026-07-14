@@ -143,14 +143,22 @@ const links = [
     });
   };
 
-  // Altura del navbar fijo (se recalcula al redimensionar, ver listener abajo)
-  let navbarHeight = navbar.offsetHeight;
-
   const getActiveSection = () => {
+    // Si llegamos al final de la página, la última sección es la activa aunque
+    // su top no haya cruzado la línea de referencia (secciones cortas al pie).
+    const scrolledToBottom =
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    if (scrolledToBottom) {
+      return sections[sections.length - 1]?.getAttribute('id') ?? 'hero';
+    }
+
+    // Línea de referencia en el centro del viewport: una sección se marca activa
+    // cuando su top la cruza, es decir, cuando ya domina lo que el usuario ve.
+    // Robusto tanto para secciones cortas como más altas que el viewport.
+    const line = window.innerHeight / 2;
     let current = 'hero';
     sections.forEach((section) => {
-      const top = section.getBoundingClientRect().top;
-      if (top <= navbarHeight + 16) {
+      if (section.getBoundingClientRect().top <= line) {
         current = section.getAttribute('id') ?? current;
       }
     });
@@ -182,12 +190,11 @@ const links = [
     });
   }, { passive: true });
 
-  // Al redimensionar: recalcular la altura del navbar, cerrar el menú mobile
-  // si se pasa al layout desktop (el CSS lo oculta en md pero el body quedaría
-  // sin scroll) y refrescar el scrollspy sin esperar al próximo scroll.
+  // Al redimensionar: cerrar el menú mobile si se pasa al layout desktop (el CSS
+  // lo oculta en md pero el body quedaría sin scroll) y refrescar el scrollspy
+  // sin esperar al próximo scroll.
   // 768px = breakpoint `md` de Tailwind, el mismo que oculta el menú.
   window.addEventListener('resize', () => {
-    navbarHeight = navbar.offsetHeight;
     if (window.innerWidth >= 768) closeMenu();
     onScroll();
   }, { passive: true });
