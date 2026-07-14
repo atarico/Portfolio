@@ -51,7 +51,7 @@
   }
 
   body {
-    min-height: 100vh;
+    min-height: 100dvh;
     line-height: 1.7;
     background-color: var(--bg-primary);
   }
@@ -149,9 +149,9 @@
 
 /* ─── Estilos compartidos entre secciones ───────────────────────────────────── */
 .section-label {
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -190,16 +190,24 @@
   flex-shrink: 0;
 }
 
-.dot-red    { background: #ff5f57; }
-.dot-yellow { background: #febc2e; }
-.dot-green  { background: #28c840; }
+.dot-red {
+  background: #ff5f57;
+}
+
+.dot-yellow {
+  background: #febc2e;
+}
+
+.dot-green {
+  background: #28c840;
+}
 
 /* ─── Reveal-on-scroll ──────────────────────────────────────────────────────────
    El estado oculto solo aplica con JS disponible (html.js): sin JS el contenido
    queda visible (progressive enhancement). */
 .reveal {
   transition:
-    opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 

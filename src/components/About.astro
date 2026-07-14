@@ -7,8 +7,8 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { key: 'ubicación',   value: 'Buenos Aires, Argentina' },
-  { key: 'rol_actual',  value: 'Profesor en la UTN + Dev' },
+  { key: 'ubicación',   value: 'Buenos Aires, Argentina'  },
+  { key: 'rol_actual',  value: 'Frontend Dev'             },
   { key: 'stack',       value: stack                      },
   { key: 'educación',   value: 'Ing. Sistemas (en curso)' },
   { key: 'café_por_día', value: 3                         },
@@ -18,6 +18,8 @@ const stats: Stat[] = [
 <section id="about" class="about-section" aria-labelledby="about-title">
   <div class="about-inner">
 
+    <h2 id="about-title" class="sr-only">Sobre mí</h2>
+
     <!-- ── Título terminal ── -->
     <header class="about-header reveal">
       <p class="section-label">
@@ -25,7 +27,6 @@ const stats: Stat[] = [
       </p>
     </header>
 
-    <h2 id="about-title" class="about-title">Sobre mí</h2>
     <!-- ── Grid dos columnas ── -->
     <div class="about-grid">
 
@@ -35,7 +36,7 @@ const stats: Stat[] = [
         <p class="about-paragraph">
           Soy desarrollador web enfocado en el ecosistema
           JavaScript/TypeScript. Actualmente curso Ingeniería en Sistemas en
-          la UTN y soy profesor de Programación III en la Tecnicatura Superior
+          la UTN y fui profesor de Programación III en la Tecnicatura Superior
           en Programación de la misma universidad.
         </p>
 
@@ -49,7 +50,7 @@ const stats: Stat[] = [
           Trabajo con React, Astro, Next.js, Node.js y Supabase. Lo que más
           disfruto es llevar ideas a producción: una app de geolocalización
           de farmacias, un sistema de entradas para un centro cultural, un
-          gestor de llaves para la UTN.
+          gestor de llaves para la UTN, una web para un broker de seguros.
         </p>
       </div>
 
@@ -185,26 +186,6 @@ const stats: Stat[] = [
   }
 
   /* ── Texto del perfil ── */
-  .about-title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--text-primary);
-    position: relative;
-    padding-left: 1rem;
-  }
-
-  .about-title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.15em;
-    bottom: 0.15em;
-    width: 3px;
-    background: var(--text-accent);
-    box-shadow: var(--glow-sm);
-    border-radius: 2px;
-  }
-
   .about-paragraph {
     font-size: clamp(1rem, 2vw, 1.1rem);
     color: var(--text-muted);
