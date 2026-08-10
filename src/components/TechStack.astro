@@ -32,10 +32,13 @@ const categories: Category[] = [
     pkg: 'backend-db@latest',
     skills: [
       { name: 'Node.js',    },
-      { name: 'Supabase',   },
+      { name: 'Python',     },
       { name: 'C#',         },
-      { name: 'REST APIs',  },
+      { name: 'C++',        },
       { name: 'SQL',        },
+      { name: 'PostgreSQL', },
+      { name: 'SQLite',     },
+      { name: 'Supabase',   },
     ],
   },
   {
@@ -43,11 +46,14 @@ const categories: Category[] = [
     label: 'tools',
     pkg: 'tools@latest',
     skills: [
-      { name: 'Git',    },
-      { name: 'GitHub', },
-      { name: 'pnpm',   },
-      { name: 'Vercel', },
-      { name: 'Scrum',  },
+      { name: 'Git',         },
+      { name: 'GitHub',      },
+      { name: 'pnpm',        },
+      { name: 'Vercel',      },
+      { name: 'REST APIs',   },
+      { name: 'Claude Code', },
+      { name: 'opencode',    },
+      { name: 'Scrum',       },
     ],
   },
 ];
@@ -174,6 +180,9 @@ const categories: Category[] = [
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.25rem;
+    /* Sin esto la card se estira hasta igualar a la más alta de su fila y
+       queda un hueco grande debajo de las categorías con menos items. */
+    align-items: start;
   }
 
   @media (min-width: 640px) {
