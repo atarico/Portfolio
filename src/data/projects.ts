@@ -10,6 +10,16 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    title: "Skills Inspector",
+    status: "Producción",
+    description:
+      "Herramienta open source que audita extensiones de agentes de IA (Claude Code, Codex, opencode) antes de instalarlas: analiza el código de forma estática, rastrea el flujo de datos hasta detectar secretos que salen a la red y reporta las capacidades que la descripción de la extensión nunca menciona. Sin dependencias externas.",
+    tech: ["Python", "Análisis estático", "Seguridad", "CLI"],
+    github: "https://github.com/atarico/skills-inspector",
+    demo: null,
+    featured: true,
+  },
+  {
     title: "Farmacias de turno San Nicolás",
     status: "Producción",
     description:
@@ -66,6 +76,16 @@ export const projects: Project[] = [
       "Plataforma de turnos para kinesiólogos: reserva, cancelación y recordatorios. Pensada para usarse desde el celular, que es donde los pacientes la necesitan.",
     tech: ["Next.js", "Tailwind CSS", "Supabase", "TypeScript"],
     github: null,
+    demo: null,
+    featured: true,
+  },
+  {
+    title: "Material didáctico UTN",
+    status: "Producción",
+    description:
+      "Repositorios de estudio y ejercitaciones que uso como docente en la Tecnicatura Superior en Programación: Programación III (JavaScript moderno, HTML5, CSS3 e introducción a React), Programación IV y Programación Orientada a Objetos en C#. Más de 70 estrellas entre los tres, usados por alumnos cursada tras cursada. El enlace apunta al de Programación III, el más usado de los tres.",
+    tech: ["JavaScript", "HTML", "CSS", "React", "C#"],
+    github: "https://github.com/atarico/UTN-programacion3",
     demo: null,
     featured: true,
   },
