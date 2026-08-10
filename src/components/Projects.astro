@@ -4,6 +4,11 @@ import { projects } from '../data/projects';
 // SVG paths como constantes para mantener el template limpio
 const ICON_GITHUB = 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z';
 const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
+
+// `featured` decide la presentación: los destacados se apilan al scrollear,
+// el resto va al grid con la descripción recortada.
+const highlighted = projects.filter((p) => p.featured);
+const secondary = projects.filter((p) => !p.featured);
 ---
 
 <section id="projects" class="projects-section" aria-labelledby="projects-title">
@@ -19,21 +24,16 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
       <p class="section-meta">
         <span class="meta-count">{projects.length} entries</span>
         <span class="meta-sep">//</span>
-        <span>featured projects</span>
+        <span>{highlighted.length} destacados</span>
       </p>
     </header>
 
-    <!-- ── Grid de cards ── -->
-    <div class="projects-grid">
-      {projects.map((project, i) => (
-        <article
-          class="project-card reveal"
-          style={`transition-delay: ${i * 130}ms`}
-        >
-          <!-- Barra de título de la "terminal" -->
+    <!-- ── Stack de destacados: se apilan con position:sticky ── -->
+    <div class="projects-stack">
+      {highlighted.map((project) => (
+        <article class="stack-card">
           <header class="card-titlebar">
             <div class="card-titlebar-left">
-              <!-- Indicador de status -->
               <span
                 class={`status-dot ${project.status === 'Producción' ? 'status-prod' : 'status-dev'}`}
                 title={project.status}
@@ -46,19 +46,105 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
             </span>
           </header>
 
-          <!-- Cuerpo de la card -->
-          <div class="card-body">
-            <!-- Descripción -->
-            <p class="card-description">{project.description}</p>
+          <div class="card-body stack-body">
+            <h3 class="stack-heading">{project.title}</h3>
+            <p class="card-description stack-description">{project.description}</p>
 
-            <!-- Tech stack -->
             <ul class="card-tags" aria-label="Tecnologías">
               {project.tech.map((t) => (
                 <li class="tag">{t}</li>
               ))}
             </ul>
 
-            <!-- Links -->
+            <footer class="card-links">
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="card-link"
+                  aria-label={`Repositorio de ${project.title} en GitHub`}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d={ICON_GITHUB} />
+                  </svg>
+                  GitHub
+                </a>
+              )}
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="card-link card-link--demo"
+                  aria-label={`Demo de ${project.title}`}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d={ICON_EXTERNAL} />
+                  </svg>
+                  Demo
+                </a>
+              )}
+              {!project.github && !project.demo && (
+                <span class="card-link card-link--private" aria-label="Repositorio privado">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                  Privado
+                </span>
+              )}
+            </footer>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- ── Resto de proyectos en grid ── -->
+    <header class="projects-subheader reveal">
+      <p class="section-label">
+        <span class="label-prefix">&gt;</span> ls ./otros-proyectos
+      </p>
+    </header>
+
+    <div class="projects-grid">
+      {secondary.map((project, i) => (
+        <article
+          class="project-card grid-card reveal"
+          style={`transition-delay: ${i * 130}ms`}
+        >
+          <header class="card-titlebar">
+            <div class="card-titlebar-left">
+              <span
+                class={`status-dot ${project.status === 'Producción' ? 'status-prod' : 'status-dev'}`}
+                title={project.status}
+                aria-label={project.status}
+              />
+              <span class="card-title">{project.title}</span>
+            </div>
+            <span class={`status-badge ${project.status === 'Producción' ? 'badge-prod' : 'badge-dev'}`}>
+              {project.status}
+            </span>
+          </header>
+
+          <div class="card-body">
+            <!-- La descripción va completa en el HTML: el recorte es solo visual
+                 y se aplica con CSS bajo html.js. Sin JS se lee entera. -->
+            <p class="card-description">{project.description}</p>
+
+            <!-- Oculto por defecto; el script lo muestra solo si el texto
+                 realmente desborda el recorte. -->
+            <button type="button" class="card-more" aria-expanded="false" hidden>
+              <span class="more-prefix">&gt;</span>
+              <span class="more-label">ver mas</span>
+            </button>
+
+            <ul class="card-tags" aria-label="Tecnologías">
+              {project.tech.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+
             <footer class="card-links">
               {project.github && (
                 <a
@@ -107,7 +193,8 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
 </section>
 
 <script>
-  const cards = document.querySelectorAll<HTMLElement>('#projects .reveal');
+  /* ── Reveal de las cards del grid ── */
+  const revealables = document.querySelectorAll<HTMLElement>('#projects .reveal');
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -121,7 +208,88 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     { threshold: 0.1 }
   );
 
-  cards.forEach((el) => observer.observe(el));
+  revealables.forEach((el) => observer.observe(el));
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Stack: peek escalonado + profundidad al apilarse ──
+     Cada card se pinnea unos px más abajo que la anterior, dejando visible el
+     borde de las que ya se apilaron. Al ser cubierta, se achica y oscurece. */
+  const stackCards = Array.from(
+    document.querySelectorAll<HTMLElement>('#projects .stack-card')
+  );
+
+  const PEEK = 14; // px visibles de cada card apilada
+
+  stackCards.forEach((card, i) => {
+    card.style.setProperty('--peek', `${i * PEEK}px`);
+  });
+
+  if (!reduceMotion && stackCards.length > 1) {
+    let ticking = false;
+
+    const stickTop = (el: HTMLElement) =>
+      parseFloat(window.getComputedStyle(el).top) || 0;
+
+    const updateStack = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+
+      for (let i = 0; i < stackCards.length - 1; i++) {
+        const next = stackCards[i + 1];
+        const nextTop = next.getBoundingClientRect().top;
+        const target = stickTop(next);
+
+        // 0 → la próxima card todavía abajo; 1 → llegó a su posición sticky
+        let progress = (vh - nextTop) / (vh - target);
+        progress = Math.max(0, Math.min(1, progress));
+
+        const card = stackCards[i];
+        if (progress > 0) {
+          card.style.transform = `scale(${1 - progress * 0.05})`;
+          card.style.filter = `brightness(${1 - progress * 0.28})`;
+        } else {
+          card.style.transform = '';
+          card.style.filter = '';
+        }
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(updateStack);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    updateStack();
+  }
+
+  /* ── "ver mas": el botón solo aparece si la descripción desborda el recorte ── */
+  document.querySelectorAll<HTMLElement>('#projects .grid-card').forEach((card) => {
+    const desc = card.querySelector<HTMLElement>('.card-description');
+    const btn = card.querySelector<HTMLButtonElement>('.card-more');
+    const label = btn?.querySelector<HTMLElement>('.more-label');
+    if (!desc || !btn || !label) return;
+
+    // Ya expandida no hay nada que medir: clientHeight iguala a scrollHeight y
+    // ocultaríamos el botón que sirve para volver a contraer.
+    const sync = () => {
+      if (card.classList.contains('is-expanded')) return;
+      btn.hidden = desc.scrollHeight - desc.clientHeight <= 2;
+    };
+
+    btn.addEventListener('click', () => {
+      const expanded = card.classList.toggle('is-expanded');
+      btn.setAttribute('aria-expanded', String(expanded));
+      label.textContent = expanded ? 'ver menos' : 'ver mas';
+    });
+
+    sync();
+    window.addEventListener('resize', sync);
+  });
 </script>
 
 <style>
@@ -131,7 +299,7 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
   }
 
   .projects-inner {
-    max-width: 64rem;
+    max-width: 68rem;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -139,7 +307,8 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
   }
 
   /* ── Header ── */
-  .projects-header {
+  .projects-header,
+  .projects-subheader {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -157,6 +326,65 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
   }
 
   /* .meta-count y .meta-sep viven en global.css */
+
+  /* ══════════════════════════════════════════════════════════════════
+     STACK DE DESTACADOS
+     Cada card es sticky: al bajar se apilan y queda visible el borde de
+     la anterior (--peek, escalonado por JS). El achicado y el oscurecido
+     los aplica el script; sin JS o con reduced-motion las cards siguen
+     apilándose, solo que planas.
+     ══════════════════════════════════════════════════════════════════ */
+  .projects-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    /* Más angosto que el grid: a lo ancho del contenedor la card quedaba como
+       un banner con la mitad derecha vacía. */
+    width: 100%;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  .stack-card {
+    /* Acoplado a --scroll-padding-top de global.css (navbar fijo, 5rem). */
+    --stick: 5.5rem;
+    position: sticky;
+    top: calc(var(--stick) + var(--peek, 0px));
+    display: flex;
+    flex-direction: column;
+    /* Sin min-height: la card la dicta su contenido, para que no se despegue
+       del tamaño de las del grid. El apilado sigue leyéndose igual. */
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    box-shadow:
+      var(--glow-sm),
+      0 -8px 40px rgba(0, 0, 0, 0.45),
+      0 24px 50px rgba(0, 0, 0, 0.45);
+    transform-origin: center top;
+    will-change: transform, filter;
+  }
+
+  .stack-body {
+    gap: 0.9rem;
+    padding: 1.35rem 1.5rem 1.1rem;
+  }
+
+  .stack-heading {
+    font-size: 1.15rem;
+    line-height: 1.25;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  /* Con `.stack-description` a secas perdía por orden de fuente: más abajo,
+     `.card-description { flex: 1 }` tiene la misma especificidad y ganaba,
+     estirando la caja y abriendo un hueco antes de los tags. */
+  .stack-card .card-description {
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+  }
 
   /* ── Grid ── */
   .projects-grid {
@@ -248,6 +476,10 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     50%       { opacity: 0.5; box-shadow: 0 0 12px rgba(254, 188, 46, 0.3); }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .status-dev { animation: none; }
+  }
+
   /* ── Status badge ── */
   .status-badge {
     font-size: 0.6rem;
@@ -287,6 +519,60 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     flex: 1;
   }
 
+  /* ── Recorte de la descripción en el grid ──
+     Solo bajo html.js: sin JavaScript el botón nunca aparece, así que la
+     descripción tiene que quedar entera y legible. */
+  :global(html.js) .grid-card .card-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+
+  :global(html.js) .grid-card.is-expanded .card-description {
+    display: block;
+    overflow: visible;
+    flex: 1;
+  }
+
+  /* ── Botón "ver mas" ── */
+  .card-more {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: -0.4rem;
+    padding: 0.15rem 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--text-accent);
+    cursor: pointer;
+    transition: text-shadow 0.2s ease, opacity 0.2s ease;
+  }
+
+  .card-more[hidden] {
+    display: none;
+  }
+
+  .card-more:hover {
+    text-shadow: var(--glow-sm);
+  }
+
+  .card-more:focus-visible {
+    outline: 1px solid var(--text-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .more-prefix {
+    opacity: 0.6;
+  }
+
   /* ── Tech tags ── */
   .card-tags {
     display: flex;
@@ -294,6 +580,11 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
     gap: 0.4rem;
     list-style: none;
     padding: 0;
+    margin-top: auto;
+  }
+
+  .stack-card .card-tags {
+    margin-top: 0;
   }
 
   .tag {
@@ -309,7 +600,8 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
       box-shadow  0.2s ease;
   }
 
-  .project-card:hover .tag {
+  .project-card:hover .tag,
+  .stack-card:hover .tag {
     background: rgba(0, 255, 65, 0.08);
     box-shadow: 0 0 4px rgba(0, 255, 65, 0.2);
   }
@@ -388,7 +680,9 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
 
   /* ── Reveal: base compartida en global.css ──
      Variación local: desplazamiento de 20px. Los selectores con #projects
-     ganan en especificidad a la base global. */
+     ganan en especificidad a la base global.
+     Las .stack-card quedan fuera a propósito: el translateY del reveal
+     pelearía con el scale que el script aplica al apilarlas. */
   :global(html.js) #projects .reveal {
     transform: translateY(20px);
   }

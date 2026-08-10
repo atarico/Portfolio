@@ -37,7 +37,7 @@ export const projects: Project[] = [
     tech: ["React", "TypeScript", "Tailwind CSS", "Wouter"],
     github: "https://github.com/atarico/utn-llaves",
     demo: "https://llaves-utn.netlify.app/",
-    featured: true,
+    featured: false,
   },
   {
     title: "Organización Duin",
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     tech: ["Astro", "CSS", "JavaScript", "Vercel"],
     github: null,
     demo: "https://org-duin-sancor-seg.vercel.app/",
-    featured: true,
+    featured: false,
   },
   {
     title: "EP Cantina Entradas",
@@ -57,25 +57,15 @@ export const projects: Project[] = [
     tech: ["Next.js", "Supabase", "TypeScript"],
     github: null,
     demo: "https://ep-cantina-entradas.vercel.app/",
-    featured: true,
+    featured: false,
   },
   {
-    title: "Calculadora Derivadas/Integrales",
-    status: "Producción",
-    description:
-      "Calculadora web de derivadas e integrales con resolución paso a paso. Ideal para estudiantes que quieren entender el proceso, no solo el resultado.",
-    tech: ["React", "TypeScript", "mathjs", "Tailwind CSS", "Vite"],
-    github: "https://github.com/atarico/calculadora-Analisis-Matematico",
-    demo: "https://cal-derivada-integrales.netlify.app/",
-    featured: true,
-  },
-  {
-    title: "Kinesio App",
+    title: "Turnos Multi-Tenant",
     status: "En desarrollo",
     description:
-      "Plataforma de turnos para kinesiólogos: reserva, cancelación y recordatorios. Pensada para usarse desde el celular, que es donde los pacientes la necesitan.",
-    tech: ["Next.js", "Tailwind CSS", "Supabase", "TypeScript"],
-    github: null,
+      "Plataforma de turnos multi-tenant: cada negocio administra su propia agenda con los datos aislados por organización a nivel de base de datos. Generalización del sistema de farmacias de turno, con arquitectura modular por dominio y políticas de acceso por fila en Postgres.",
+    tech: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Tailwind CSS"],
+    github: "https://github.com/atarico/turnos-multi-tenant",
     demo: null,
     featured: true,
   },
@@ -87,6 +77,6 @@ export const projects: Project[] = [
     tech: ["JavaScript", "HTML", "CSS", "React", "C#"],
     github: "https://github.com/atarico/UTN-programacion3",
     demo: null,
-    featured: true,
+    featured: false,
   },
 ];
