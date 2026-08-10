@@ -268,6 +268,8 @@ const secondary = projects.filter((p) => !p.featured);
   }
 
   /* ── "ver mas": el botón solo aparece si la descripción desborda el recorte ── */
+  const syncs: Array<() => void> = [];
+
   document.querySelectorAll<HTMLElement>('#projects .grid-card').forEach((card) => {
     const desc = card.querySelector<HTMLElement>('.card-description');
     const btn = card.querySelector<HTMLButtonElement>('.card-more');
@@ -285,11 +287,29 @@ const secondary = projects.filter((p) => !p.featured);
       const expanded = card.classList.toggle('is-expanded');
       btn.setAttribute('aria-expanded', String(expanded));
       label.textContent = expanded ? 'ver menos' : 'ver mas';
+      // Al contraer hay que volver a medir: si hubo un resize mientras estaba
+      // expandida, el guard de sync() lo salteó y el botón quedó con el estado
+      // calculado para el ancho anterior.
+      sync();
     });
 
     sync();
-    window.addEventListener('resize', sync);
+    syncs.push(sync);
   });
+
+  /* Un solo listener con rAF para todas las cards: uno por card disparaba
+     lecturas de layout sin throttling en cada evento de resize. */
+  if (syncs.length) {
+    let resizeTicking = false;
+    window.addEventListener('resize', () => {
+      if (resizeTicking) return;
+      resizeTicking = true;
+      window.requestAnimationFrame(() => {
+        resizeTicking = false;
+        syncs.forEach((fn) => fn());
+      });
+    });
+  }
 </script>
 
 <style>
