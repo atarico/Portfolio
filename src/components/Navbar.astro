@@ -1,23 +1,34 @@
 ---
 const links = [
-  { href: '#hero',       label: 'Inicio'      },
-  { href: '#about',      label: 'Sobre mí'    },
-  { href: '#projects',   label: 'Proyectos'   },
   { href: '#experience', label: 'Experiencia' },
+  { href: '#projects',   label: 'Proyectos'   },
+  { href: '#about',      label: 'Sobre mí'    },
   { href: '#tech',       label: 'Skills'      },
   { href: '#contact',    label: 'Contacto'    },
 ];
+
+// El scrollspy solo observa las secciones que tienen link en el menú; `#hero` queda
+// fuera a propósito, porque el tope de la página no marca ninguna.
+const navSectionIds = links.map(({ href }) => href.slice(1));
 ---
 
-<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+<!-- Barra flotante centrada, al estilo porfolio.dev.
+     `data-sections` viaja por atributo y no por `define:vars`: eso último obligaría a
+     un script inline, y el CSP de vercel.json solo permite `script-src 'self'`. -->
+<header
+  id="navbar"
+  class="fixed top-0 left-0 right-0 z-50 flex flex-col items-center px-4 pt-3"
+  data-sections={navSectionIds.join(',')}
+>
   <nav
-    class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
+    class="nav-pill flex items-center gap-3 md:gap-5 px-4 md:px-5 py-2 transition-all duration-300"
     aria-label="Navegación principal"
   >
-    <!-- Logo: prompt de terminal -->
+    <!-- Logo: prompt de terminal. Solo en mobile, donde los links viven en el
+         desplegable y la píldora quedaría vacía. -->
     <a
       href="#hero"
-      class="logo group flex items-center gap-0 font-mono text-base select-none"
+      class="logo md:hidden flex items-center font-mono text-sm select-none"
       aria-label="Agustín Tarico — inicio"
     >
       <span class="text-muted" aria-hidden="true">~/</span>
@@ -27,12 +38,12 @@ const links = [
     </a>
 
     <!-- Desktop navigation -->
-    <ul class="hidden md:flex items-center gap-7" role="list">
+    <ul class="hidden md:flex items-center gap-5" role="list">
       {links.map(({ href, label }) => (
         <li>
           <a
             href={href}
-            class="nav-link text-muted hover:text-accent text-base tracking-widest uppercase transition-colors duration-200"
+            class="nav-link text-muted hover:text-accent text-sm tracking-wider uppercase transition-colors duration-200"
             aria-current="false"
           >
             {label}
@@ -47,7 +58,7 @@ const links = [
       aria-label="Abrir menú de navegación"
       aria-expanded="false"
       aria-controls="mobile-menu"
-      class="md:hidden flex flex-col justify-center gap-1.25 w-10 h-10 p-1.5 text-accent rounded"
+      class="md:hidden flex flex-col justify-center gap-1.25 w-8 h-8 p-1 text-accent rounded"
     >
       <span class="hamburger-bar block w-full h-px bg-current origin-center transition-all duration-300"></span>
       <span class="hamburger-bar block w-full h-px bg-current transition-all duration-300"></span>
@@ -55,14 +66,14 @@ const links = [
     </button>
   </nav>
 
-  <!-- Mobile menu -->
+  <!-- Mobile menu: panel flotante debajo de la píldora -->
   <div
     id="mobile-menu"
-    class="mobile-menu hidden md:hidden"
+    class="mobile-menu hidden md:hidden w-full max-w-sm mt-2"
     role="navigation"
     aria-label="Menú de navegación móvil"
   >
-    <ul class="flex flex-col py-4 px-6 gap-1" role="list">
+    <ul class="flex flex-col py-3 px-5" role="list">
       {links.map(({ href, label }) => (
         <li>
           <a
@@ -130,7 +141,13 @@ const links = [
   /* ────────────────────────────────────────────────
    * Scrollspy: sección activa según posición de scroll
    * ──────────────────────────────────────────────── */
-  const sections    = document.querySelectorAll<HTMLElement>('section[id]');
+  // Solo las secciones que tienen link en el menú, en orden de documento. Se filtra por
+  // `section[id]` (y no por el orden del menú) para que un reorden de la página no
+  // desincronice la búsqueda de "última sección que cruzó la línea".
+  const navSectionIds = (navbar.dataset.sections ?? '').split(',').filter(Boolean);
+  const sections = [...document.querySelectorAll<HTMLElement>('section[id]')]
+    .filter((section) => navSectionIds.includes(section.id));
+
   const desktopLinks = navbar.querySelectorAll<HTMLAnchorElement>('.nav-link');
   const mobileLinks  = mobileMenu.querySelectorAll<HTMLAnchorElement>('.mobile-link');
   const allNavLinks  = [...desktopLinks, ...mobileLinks];
@@ -149,17 +166,18 @@ const links = [
     const scrolledToBottom =
       window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
     if (scrolledToBottom) {
-      return sections[sections.length - 1]?.getAttribute('id') ?? 'hero';
+      return sections[sections.length - 1]?.id ?? '';
     }
 
     // Línea de referencia en el centro del viewport: una sección se marca activa
     // cuando su top la cruza, es decir, cuando ya domina lo que el usuario ve.
     // Robusto tanto para secciones cortas como más altas que el viewport.
+    // Cadena vacía = ninguna sección del menú domina todavía (estamos en el hero).
     const line = window.innerHeight / 2;
-    let current = 'hero';
+    let current = '';
     sections.forEach((section) => {
       if (section.getBoundingClientRect().top <= line) {
-        current = section.getAttribute('id') ?? current;
+        current = section.id;
       }
     });
     return current;
@@ -204,23 +222,78 @@ const links = [
 </script>
 
 <style>
+  /* El fondo del navbar se deriva por completo de `--navbar-fill` (0 → 1, registrada
+     en global.css). Así el estado "lleno" se declara una sola vez y las dos rutas de
+     abajo solo mueven el número.
+     El borde existe siempre a 1px transparente: animar `border-bottom-color` en vez
+     de aparecer el borde evita que el contenido salte 1px al scrollear. */
+  /* El header solo posiciona; el fondo vive en la píldora flotante. */
   #navbar {
-    background: transparent;
+    pointer-events: none;
   }
 
-  #navbar.navbar-scrolled {
-    background: rgba(10, 10, 10, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border-accent);
-    box-shadow: 0 4px 24px rgba(0, 255, 65, 0.04);
+  .nav-pill,
+  .mobile-menu {
+    pointer-events: auto;
+  }
+
+  /* El fondo se deriva por completo de `--navbar-fill` (0 → 1, registrada en
+     global.css). Así el estado "lleno" se declara una sola vez y las dos rutas de
+     abajo solo mueven el número. */
+  .nav-pill {
+    border-radius: 9999px;
+    background: rgba(10, 10, 10, calc(0.88 * var(--navbar-fill)));
+    backdrop-filter: blur(calc(14px * var(--navbar-fill)));
+    -webkit-backdrop-filter: blur(calc(14px * var(--navbar-fill)));
+    border: 1px solid rgba(0, 255, 65, calc(0.25 * var(--navbar-fill)));
+    box-shadow: 0 4px 24px rgba(0, 255, 65, calc(0.04 * var(--navbar-fill)));
+  }
+
+  /* Ruta moderna: el fondo aparece gradual, atado a la posición de scroll. */
+  @keyframes navbar-fill {
+    to {
+      --navbar-fill: 1;
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .nav-pill {
+      animation: navbar-fill linear forwards;
+      animation-timeline: scroll();
+      animation-range: 0 120px;
+    }
+  }
+
+  /* Fallback: el script agrega `.navbar-scrolled` a los 30px y la transición del
+     header lo suaviza.
+     Va dentro de `@supports not` a propósito: una declaración normal le gana a la
+     animación sobre `--navbar-fill`, así que si la clase aplicara en la ruta moderna
+     el fondo saltaría a full apenas cruza los 30px y el degradado no se vería. */
+  @supports not (animation-timeline: scroll()) {
+    #navbar.navbar-scrolled .nav-pill {
+      --navbar-fill: 1;
+    }
+  }
+
+  /* Con reduced-motion se vuelve a la ruta por clase: el `animation-duration: 0.01ms
+     !important` de global.css completaría la animación de entrada y la píldora
+     arrancaría llena desde el top. */
+  @media (prefers-reduced-motion: reduce) {
+    .nav-pill {
+      animation: none;
+    }
+
+    #navbar.navbar-scrolled .nav-pill {
+      --navbar-fill: 1;
+    }
   }
 
   .mobile-menu {
     background: rgba(11, 11, 11, 0.96);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border-accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 14px;
   }
 
   /* ── Desktop link: línea animada al hover ── */

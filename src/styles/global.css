@@ -26,6 +26,15 @@
   --glow-lg: 0 0 20px rgba(0, 255, 65, 0.50), 0 0 40px rgba(0, 255, 65, 0.20);
 }
 
+/* Progreso del fondo del navbar, de 0 (transparente) a 1 (opaco). Registrarla es lo
+   que la vuelve interpolable: sin @property el navegador la trataría como un token
+   opaco y saltaría de 0 a 1 en vez de transicionar. Se consume en Navbar.astro. */
+@property --navbar-fill {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 /* ─── Reset mínimo ──────────────────────────────────────────────────────────── */
 @layer base {
 
