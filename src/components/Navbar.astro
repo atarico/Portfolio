@@ -1,10 +1,12 @@
 ---
+// `cmd` es el mismo comando que encabeza cada sección: en mobile el navbar lo
+// escribe al lado del prompt según la sección activa.
 const links = [
-  { href: '#experience', label: 'Experiencia' },
-  { href: '#projects',   label: 'Proyectos'   },
-  { href: '#about',      label: 'Sobre mí'    },
-  { href: '#tech',       label: 'Skills'      },
-  { href: '#contact',    label: 'Contacto'    },
+  { href: '#experience', label: 'Experiencia', cmd: 'git log --experience' },
+  { href: '#projects',   label: 'Proyectos',   cmd: 'ls ./proyectos'       },
+  { href: '#about',      label: 'Sobre mí',    cmd: 'cat about.md'         },
+  { href: '#tech',       label: 'Skills',      cmd: 'npm list --skills'    },
+  { href: '#contact',    label: 'Contacto',    cmd: 'ssh atarico@contacto' },
 ];
 
 // El scrollspy solo observa las secciones que tienen link en el menú; `#hero` queda
@@ -21,28 +23,34 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
   data-sections={navSectionIds.join(',')}
 >
   <nav
-    class="nav-pill flex items-center gap-3 md:gap-5 px-4 md:px-5 py-2 transition-all duration-300"
+    class="nav-pill flex items-center justify-between md:justify-center gap-3 md:gap-5 w-full max-w-md md:w-auto md:max-w-none px-4 md:px-5 py-2 transition-all duration-300"
     aria-label="Navegación principal"
   >
-    <!-- Logo: prompt de terminal. Solo en mobile, donde los links viven en el
-         desplegable y la píldora quedaría vacía. -->
-    <a
-      href="#hero"
-      class="logo md:hidden flex items-center font-mono text-sm select-none"
-      aria-label="Agustín Tarico — inicio"
-    >
-      <span class="text-muted" aria-hidden="true">~/</span>
-      <span class="text-accent font-medium">atarico</span>
-      <span class="text-muted ml-2" aria-hidden="true">$</span>
-      <span class="cursor-blink ml-1 text-accent font-bold" aria-hidden="true">_</span>
-    </a>
+    <!-- Prompt de terminal. Solo en mobile, donde los links viven en el
+         desplegable y la píldora quedaría con el hamburguesa solo.
+         El comando es decorativo (`aria-hidden`): la sección activa ya se
+         anuncia con `aria-current` en los links del menú. -->
+    <div class="nav-prompt md:hidden flex items-center min-w-0 select-none">
+      <a
+        href="#hero"
+        class="logo flex items-center shrink-0"
+        aria-label="Agustín Tarico — inicio"
+      >
+        <span class="text-muted" aria-hidden="true">~/</span>
+        <span class="text-accent font-medium">atarico</span>
+      </a>
+      <span class="text-muted ml-2 shrink-0" aria-hidden="true">$</span>
+      <span id="nav-cmd" class="nav-cmd" aria-hidden="true"></span>
+      <span class="cursor-blink shrink-0 ml-1 text-accent font-bold" aria-hidden="true">_</span>
+    </div>
 
     <!-- Desktop navigation -->
     <ul class="hidden md:flex items-center gap-5" role="list">
-      {links.map(({ href, label }) => (
+      {links.map(({ href, label, cmd }) => (
         <li>
           <a
             href={href}
+            data-cmd={cmd}
             class="nav-link text-muted hover:text-accent text-sm tracking-wider uppercase transition-colors duration-200"
             aria-current="false"
           >
@@ -152,12 +160,23 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
   const mobileLinks  = mobileMenu.querySelectorAll<HTMLAnchorElement>('.mobile-link');
   const allNavLinks  = [...desktopLinks, ...mobileLinks];
 
+  // En mobile el prompt escribe el comando de la sección activa. Vacío = estamos
+  // en el hero y solo se ve `~/atarico $ _`.
+  const cmdEl = document.getElementById('nav-cmd');
+
   const setActive = (id: string) => {
     allNavLinks.forEach((link) => {
       const isActive = link.getAttribute('href') === `#${id}`;
       link.classList.toggle('nav-link--active', isActive);
       link.setAttribute('aria-current', isActive ? 'true' : 'false');
     });
+
+    if (cmdEl) {
+      const match = [...desktopLinks].find(
+        (link) => link.getAttribute('href') === `#${id}`
+      );
+      cmdEl.textContent = match?.dataset.cmd ?? '';
+    }
   };
 
   const getActiveSection = () => {
@@ -294,6 +313,29 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border-accent);
     border-radius: 14px;
+  }
+
+  /* ── Prompt de mobile ── */
+  .nav-prompt {
+    /* 0.8rem en vez de 0.875rem: con `ssh atarico@contacto` la línea entera son
+       33 caracteres y a text-sm no entra en 375px junto al hamburguesa. */
+    font-size: 0.8rem;
+  }
+
+  /* El comando es lo único que cede: el nombre y el cursor no se recortan nunca
+     (`shrink-0` en el markup), así que si falta lugar se corta el comando. */
+  .nav-cmd {
+    min-width: 0;
+    margin-left: 0.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-accent);
+  }
+
+  /* En el hero no hay comando: sin esto quedaría un hueco doble entre `$` y `_`. */
+  .nav-cmd:empty {
+    margin-left: 0;
   }
 
   /* ── Desktop link: línea animada al hover ── */
