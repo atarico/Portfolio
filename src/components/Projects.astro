@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 import { projects } from '../data/projects';
 
 // SVG paths como constantes para mantener el template limpio
@@ -47,54 +49,79 @@ const secondary = projects.filter((p) => !p.featured);
           </header>
 
           <div class="card-body stack-body">
-            <h3 class="stack-heading">{project.title}</h3>
-            <p class="card-description stack-description">{project.description}</p>
+            {project.image && (
+              <figure class="stack-shot">
+                <Image
+                  src={project.image}
+                  alt={project.imageAlt ?? ''}
+                  width={352}
+                  densities={[1, 2]}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            )}
 
-            <ul class="card-tags" aria-label="Tecnologías">
-              {project.tech.map((t) => (
-                <li class="tag">{t}</li>
-              ))}
-            </ul>
+            <div class="stack-text">
+              <!-- Este bloque mide exactamente lo mismo que la captura (--shot-h),
+                   así el borde superior de .card-links cae justo en el borde
+                   inferior de la imagen. -->
+              <div class="stack-text-main">
+                <h3 class="stack-heading">{project.title}</h3>
+                <p class="card-description stack-description">{project.description}</p>
 
-            <footer class="card-links">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="card-link"
-                  aria-label={`Repositorio de ${project.title} en GitHub`}
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d={ICON_GITHUB} />
-                  </svg>
-                  GitHub
-                </a>
-              )}
-              {project.demo && (
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="card-link card-link--demo"
-                  aria-label={`Demo de ${project.title}`}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d={ICON_EXTERNAL} />
-                  </svg>
-                  Demo
-                </a>
-              )}
-              {!project.github && !project.demo && (
-                <span class="card-link card-link--private" aria-label="Repositorio privado">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0110 0v4" />
-                  </svg>
-                  Privado
-                </span>
-              )}
-            </footer>
+                <button type="button" class="card-more" aria-expanded="false" hidden>
+                  <span class="more-prefix">&gt;</span>
+                  <span class="more-label">ver mas</span>
+                </button>
+
+                <ul class="card-tags" aria-label="Tecnologías">
+                  {project.tech.map((t) => (
+                    <li class="tag">{t}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <footer class="card-links">
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="card-link"
+                    aria-label={`Repositorio de ${project.title} en GitHub`}
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d={ICON_GITHUB} />
+                    </svg>
+                    GitHub
+                  </a>
+                )}
+                {project.demo && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="card-link card-link--demo"
+                    aria-label={`Demo de ${project.title}`}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d={ICON_EXTERNAL} />
+                    </svg>
+                    Demo
+                  </a>
+                )}
+                {!project.github && !project.demo && (
+                  <span class="card-link card-link--private" aria-label="Repositorio privado">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                    Privado
+                  </span>
+                )}
+              </footer>
+            </div>
           </div>
         </article>
       ))}
@@ -218,12 +245,23 @@ const secondary = projects.filter((p) => !p.featured);
   const stackCards = Array.from(
     document.querySelectorAll<HTMLElement>('#projects .stack-card')
   );
+  const gridCards = Array.from(
+    document.querySelectorAll<HTMLElement>('#projects .grid-card')
+  );
+
+  // 768px = el breakpoint donde el CSS hace sticky a las cards del grid. Debajo de
+  // ese ancho los secundarios también se apilan, pero como grupo aparte: cada
+  // grupo reinicia su propio escalonado de --peek.
+  const mobile = window.matchMedia('(max-width: 767px)');
+  const stackGroups = () => (mobile.matches ? [stackCards, gridCards] : [stackCards]);
 
   const PEEK = 14; // px visibles de cada card apilada
 
-  stackCards.forEach((card, i) => {
-    card.style.setProperty('--peek', `${i * PEEK}px`);
-  });
+  const setPeek = (cards: HTMLElement[]) =>
+    cards.forEach((card, i) => card.style.setProperty('--peek', `${i * PEEK}px`));
+
+  setPeek(stackCards);
+  setPeek(gridCards); // inerte en desktop: ahí las del grid no son sticky
 
   if (!reduceMotion && stackCards.length > 1) {
     let ticking = false;
@@ -231,26 +269,34 @@ const secondary = projects.filter((p) => !p.featured);
     const stickTop = (el: HTMLElement) =>
       parseFloat(window.getComputedStyle(el).top) || 0;
 
+    const clearDepth = (cards: HTMLElement[]) =>
+      cards.forEach((card) => {
+        card.style.transform = '';
+        card.style.filter = '';
+      });
+
     const updateStack = () => {
       ticking = false;
       const vh = window.innerHeight;
 
-      for (let i = 0; i < stackCards.length - 1; i++) {
-        const next = stackCards[i + 1];
-        const nextTop = next.getBoundingClientRect().top;
-        const target = stickTop(next);
+      for (const cards of stackGroups()) {
+        for (let i = 0; i < cards.length - 1; i++) {
+          const next = cards[i + 1];
+          const nextTop = next.getBoundingClientRect().top;
+          const target = stickTop(next);
 
-        // 0 → la próxima card todavía abajo; 1 → llegó a su posición sticky
-        let progress = (vh - nextTop) / (vh - target);
-        progress = Math.max(0, Math.min(1, progress));
+          // 0 → la próxima card todavía abajo; 1 → llegó a su posición sticky
+          let progress = (vh - nextTop) / (vh - target);
+          progress = Math.max(0, Math.min(1, progress));
 
-        const card = stackCards[i];
-        if (progress > 0) {
-          card.style.transform = `scale(${1 - progress * 0.05})`;
-          card.style.filter = `brightness(${1 - progress * 0.28})`;
-        } else {
-          card.style.transform = '';
-          card.style.filter = '';
+          const card = cards[i];
+          if (progress > 0) {
+            card.style.transform = `scale(${1 - progress * 0.05})`;
+            card.style.filter = `brightness(${1 - progress * 0.28})`;
+          } else {
+            card.style.transform = '';
+            card.style.filter = '';
+          }
         }
       }
     };
@@ -262,6 +308,13 @@ const secondary = projects.filter((p) => !p.featured);
       }
     };
 
+    // Al pasar a desktop las del grid dejan de apilarse, pero conservarían el
+    // scale y el brightness que les quedó inline.
+    mobile.addEventListener('change', () => {
+      clearDepth(gridCards);
+      updateStack();
+    });
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     updateStack();
@@ -270,7 +323,7 @@ const secondary = projects.filter((p) => !p.featured);
   /* ── "ver mas": el botón solo aparece si la descripción desborda el recorte ── */
   const syncs: Array<() => void> = [];
 
-  document.querySelectorAll<HTMLElement>('#projects .grid-card').forEach((card) => {
+  document.querySelectorAll<HTMLElement>('#projects .grid-card, #projects .stack-card').forEach((card) => {
     const desc = card.querySelector<HTMLElement>('.card-description');
     const btn = card.querySelector<HTMLButtonElement>('.card-more');
     const label = btn?.querySelector<HTMLElement>('.more-label');
@@ -387,8 +440,84 @@ const secondary = projects.filter((p) => !p.featured);
   }
 
   .stack-body {
-    gap: 0.9rem;
+    gap: 1.25rem;
     padding: 1.35rem 1.5rem 1.1rem;
+  }
+
+  .stack-text {
+    display: flex;
+    flex-direction: column;
+    /* Sin gap: cualquier separación acá correría la línea de .card-links por
+       debajo del borde de la imagen. El aire lo pone el padding-top del footer. */
+    gap: 0;
+    /* Sin esto el texto largo ensancha la columna y rompe el grid. */
+    min-width: 0;
+  }
+
+  /* Alto fijo para las tres capturas (tienen relaciones de aspecto distintas) y el
+     mismo alto mínimo para el bloque de texto. Así el borde superior de .card-links
+     cae siempre en el borde inferior de la imagen, tenga el proyecto la descripción
+     que tenga. */
+  .stack-card {
+    --shot-w: 22rem;
+    --shot-h: 16.5rem; /* 4:3 sobre --shot-w */
+  }
+
+  /* Dos columnas en vez de la captura a lo ancho: la card no puede crecer más que
+     el viewport o el apilado sticky deja de leerse.
+     Va con `.stack-card` adelante por la misma razón que `.card-description` de más
+     abajo: `.card-body { display: flex }` tiene la misma especificidad, está después
+     en el archivo y si no le ganamos el grid nunca aplica. */
+  @media (min-width: 768px) {
+    .stack-card .stack-body {
+      display: grid;
+      grid-template-columns: var(--shot-w) 1fr;
+      align-items: start;
+    }
+
+    .stack-card .stack-shot {
+      height: var(--shot-h);
+    }
+
+    .stack-card .stack-text-main {
+      min-height: var(--shot-h);
+    }
+  }
+
+  .stack-text-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+
+  /* Con descripciones cortas (Farmacias) los tags se pegan al fondo del bloque en
+     vez de dejar el hueco entre ellos y la línea. */
+  .stack-card .stack-text-main .card-tags {
+    margin-top: auto;
+  }
+
+  /* Compensa el gap que se le sacó a .stack-text: el botón necesita aire respecto
+     de la línea, pero ese aire tiene que ir por debajo del borde, no por encima. */
+  .stack-card .card-links {
+    padding-top: 0.75rem;
+  }
+
+  .stack-shot {
+    margin: 0;
+    border: 1px solid var(--border-accent);
+    border-radius: 4px;
+    overflow: hidden;
+    /* El img es block: sin esto el line-height del contenedor deja un hueco abajo. */
+    line-height: 0;
+  }
+
+  .stack-shot img {
+    width: 100%;
+    height: 100%;
+    /* `top` y no `center`: en las capturas de navegador lo que importa está arriba. */
+    object-fit: cover;
+    object-position: top;
   }
 
   .stack-heading {
@@ -557,6 +686,22 @@ const secondary = projects.filter((p) => !p.featured);
     flex: 1;
   }
 
+  /* ── Recorte en las destacadas ──
+     6 líneas es lo que entra en --shot-h junto al título y a dos filas de tags.
+     Sin esto, Turnos empujaba la línea por debajo del borde de la imagen. */
+  :global(html.js) .stack-card .card-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+    overflow: hidden;
+  }
+
+  :global(html.js) .stack-card.is-expanded .card-description {
+    display: block;
+    overflow: visible;
+  }
+
   /* ── Botón "ver mas" ── */
   .card-more {
     align-self: flex-start;
@@ -696,6 +841,40 @@ const secondary = projects.filter((p) => !p.featured);
     opacity: 0.35;
     cursor: default;
     pointer-events: none;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     MOBILE
+     Dos cambios respecto a desktop:
+     1. Las cards destacadas se achican (captura más baja + descripción más
+        recortada). Apiladas y a lo alto se encimaban demasiado rápido.
+     2. Los proyectos secundarios también se apilan, como los destacados.
+        El escalonado de --peek lo reinicia el script para este grupo.
+     ══════════════════════════════════════════════════════════════════ */
+  @media (max-width: 767px) {
+    .stack-shot {
+      /* Más panorámica que el 4:3 de desktop: baja el alto de la card sin
+         perder de vista la parte de arriba de la captura. */
+      aspect-ratio: 16 / 9;
+    }
+
+    :global(html.js) .stack-card .card-description {
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+
+    .projects-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .grid-card {
+      /* Mismo anclaje que .stack-card: --scroll-padding-top de global.css. */
+      --stick: 5.5rem;
+      position: sticky;
+      top: calc(var(--stick) + var(--peek, 0px));
+    }
   }
 
   /* ── Reveal: base compartida en global.css ──

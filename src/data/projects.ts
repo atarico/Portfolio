@@ -1,3 +1,9 @@
+import type { ImageMetadata } from "astro";
+
+import farmaciasImg from "../assets/projects/farmacias-de-turno.png";
+import skillsInspectorImg from "../assets/projects/skills-inspector.png";
+import turnosImg from "../assets/projects/turnos-multi-tenant.png";
+
 export interface Project {
   title: string;
   status: "Producción" | "En desarrollo";
@@ -6,6 +12,10 @@ export interface Project {
   github: string | null;
   demo: string | null;
   featured: boolean;
+  /** Captura del proyecto. Solo la tienen los destacados; el resto va sin imagen. */
+  image?: ImageMetadata;
+  /** Alt de la captura. Describe lo que se ve, no repite el título. */
+  imageAlt?: string;
 }
 
 export const projects: Project[] = [
@@ -18,6 +28,9 @@ export const projects: Project[] = [
     github: "https://github.com/atarico/skills-inspector",
     demo: null,
     featured: true,
+    image: skillsInspectorImg,
+    imageAlt:
+      "README del repositorio en GitHub, con un ejemplo de salida de la herramienta reportando tres capacidades críticas que la descripción de la extensión no menciona.",
   },
   {
     title: "Farmacias de turno San Nicolás",
@@ -28,6 +41,9 @@ export const projects: Project[] = [
     github: null,
     demo: "https://farmaciasdeturnosn.com/",
     featured: true,
+    image: farmaciasImg,
+    imageAlt:
+      "Pantalla principal mostrando la fecha y hora actual, el turno activo con su rango horario y el mapa de San Nicolás con las farmacias marcadas.",
   },
   {
     title: "Gestor de llaves UTN",
@@ -68,6 +84,9 @@ export const projects: Project[] = [
     github: "https://github.com/atarico/turnos-multi-tenant",
     demo: null,
     featured: true,
+    image: turnosImg,
+    imageAlt:
+      "Landing de la plataforma con el titular \"Tu agenda llena, sin mover un dedo\" y una tarjeta de próximo turno confirmado junto a la grilla de horarios disponibles.",
   },
   {
     title: "Material didáctico UTN",
