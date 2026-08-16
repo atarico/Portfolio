@@ -594,7 +594,10 @@ const contactLinks: ContactLink[] = [
     opacity: 0.55;
   }
 
-  .info-prefix svg {
+  /* `:global` es obligatorio: el `<svg>` lo renderiza Icon.astro y no recibe el
+     atributo de scope de este componente, así que `.info-prefix svg` compilaba a
+     `svg[data-astro-cid-…]` y no matcheaba nada — los íconos quedaban sin dimensionar. */
+  .info-prefix :global(svg) {
     width: 0.6rem;
     height: 0.6rem;
     flex-shrink: 0;
