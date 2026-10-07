@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import { yearsOfExperience } from '../config/site';
 
 // Todo el hero cierra en pills. Las dos primeras son las acciones de la página y
 // apuntan a secciones propias, así que no llevan target/rel de link externo.
@@ -43,8 +44,8 @@ const actions = [
 
     <!-- Bio -->
     <p class="hero-item hero-bio" style="animation-delay: 620ms">
-      <strong>+3 años de experiencia.</strong> Software Developer, ex profesor de
-      programación en la UTN. Especializado en desarrollo de aplicaciones web.
+      <strong>{yearsOfExperience} años de experiencia.</strong> Full Stack Developer, ex profesor de
+      programación en la UTN. Construyo aplicaciones web en producción.
       Programo porque <em>me encanta</em>.
     </p>
 
@@ -68,7 +69,7 @@ const actions = [
 
 <!-- ── Typing effect: JS vanilla ── -->
 <script>
-  const phrases: string[] = ['Software Developer', 'Ex profesor en la UTN', 'React - Astro - Supabase 🫶'];
+  const phrases: string[] = ['Full Stack Developer', 'Ex profesor en la UTN', 'React - Astro - Supabase 🫶'];
   const el       = document.getElementById('typed-text');
   let current    = 0;
   let charIndex  = 0;

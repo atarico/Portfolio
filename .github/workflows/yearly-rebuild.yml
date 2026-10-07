@@ -1,0 +1,24 @@
+name: Yearly rebuild
+
+# The portfolio is static and computes the years of experience at build time,
+# so it is rebuilt every January 1st to refresh that number.
+on:
+  schedule:
+    - cron: '0 6 1 1 *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "::error::The VERCEL_DEPLOY_HOOK_URL secret is empty or missing. Create a Vercel Deploy Hook and add it as a repository secret."
+            exit 1
+          fi
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL"
