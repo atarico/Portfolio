@@ -20,10 +20,23 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    title: "Turnos Multi-Tenant",
+    status: "Producción",
+    description:
+      "SaaS de gestión de turnos monetizado con suscripciones de Mercado Pago (webhook en producción), topes por plan y panel de superadministración. Los datos de cada tenant están aislados en la base con Row-Level Security sobre 26 migraciones versionadas; advisory locks de PostgreSQL eliminan la doble reserva. Arquitectura hexagonal con 1.079 tests en CI.",
+    tech: ["Next.js 16", "React 19", "TypeScript", "Supabase", "PostgreSQL", "Vitest"],
+    github: "https://github.com/atarico/turnos-multi-tenant",
+    demo: "https://multi-turnos.vercel.app",
+    featured: true,
+    image: turnosImg,
+    imageAlt:
+      "Landing de la plataforma con el titular \"Tu agenda llena, sin mover un dedo\" y una tarjeta de próximo turno confirmado junto a la grilla de horarios disponibles.",
+  },
+  {
     title: "Skills Inspector",
     status: "Producción",
     description:
-      "Herramienta open source que audita extensiones de agentes de IA (Claude Code, Codex, opencode) antes de instalarlas: analiza el código de forma estática, rastrea el flujo de datos hasta detectar secretos que salen a la red y reporta las capacidades que la descripción de la extensión nunca menciona. Sin dependencias externas.",
+      "Herramienta open source que audita extensiones de agentes de IA (Claude Code, Codex, opencode) antes de instalarlas: analiza el código de forma estática, rastrea el flujo de datos hasta detectar secretos que salen a la red y reporta las capacidades que la descripción de la extensión nunca menciona. Detectó 75 de 75 casos del benchmark de extensiones maliciosas con un motor de 111 reglas mapeadas a OWASP Top 10 y CWE, 596 tests y cero dependencias externas.",
     tech: ["Python", "Análisis estático", "Seguridad", "CLI"],
     github: "https://github.com/atarico/skills-inspector",
     demo: null,
@@ -36,8 +49,8 @@ export const projects: Project[] = [
     title: "Farmacias de turno San Nicolás",
     status: "Producción",
     description:
-      "App de geolocalización que muestra farmacias de turno cercanas con mapa interactivo, cálculo de distancias y redirección a Google Maps.",
-    tech: ["Astro", "React 19", "Leaflet", "Geolocation", "Vercel"],
+      "Servicio público gratuito que centraliza 72 farmacias y 12 rondas de turnos, antes dispersas en carteles y redes, con mapa por geolocalización y cálculo automático del turno vigente. Posicionado por encima del sitio preexistente en 3 de 4 búsquedas locales medidas gracias a SEO técnico y datos estructurados.",
+    tech: ["Astro", "React", "Leaflet", "SEO", "Vercel"],
     github: null,
     demo: "https://farmaciasdeturnosn.com/",
     featured: true,
@@ -66,33 +79,50 @@ export const projects: Project[] = [
     featured: false,
   },
   {
-    title: "EP Cantina Entradas",
+    title: "Estación Primera — plataforma de gestión",
     status: "Producción",
     description:
-      "Sistema de venta de entradas y bebidas para un centro cultural, pensado para usarse en vivo durante los eventos. Las ventas se registran en tiempo real sobre Supabase.",
-    tech: ["Next.js", "Supabase", "TypeScript"],
+      "Plataforma de gestión del centro cultural Estación Primera, construida en Kreva Estudio y puesta en producción en 2 meses: eventos, entradas con reparto por artista, punto de venta de barra y liquidación por evento, con RBAC para 3 roles y un entorno de demo aislado por navegador.",
+    tech: ["Next.js 16", "React 19", "TypeScript", "Supabase"],
     github: null,
     demo: "https://ep-cantina-entradas.vercel.app/",
     featured: false,
   },
   {
-    title: "Turnos Multi-Tenant",
-    status: "En desarrollo",
+    title: "Vidriera",
+    status: "Producción",
     description:
-      "Plataforma de turnos multi-tenant: cada negocio administra su propia agenda con los datos aislados por organización a nivel de base de datos. Generalización del sistema de farmacias de turno, con arquitectura modular por dominio y políticas de acceso por fila en Postgres.",
-    tech: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Tailwind CSS"],
-    github: "https://github.com/atarico/turnos-multi-tenant",
+      "Catálogo online para comercios chicos con pedido por WhatsApp, alternativa a Tienda Nube o la comisión de Mercado Libre, con un costo de operación de USD 0 a 1 por mes. Tienda estática en S3 + CloudFront, infraestructura en Terraform y pipeline de indexado orientado a eventos (Lambda, SQS, DLQ), con arquitectura hexagonal y 209 tests.",
+    tech: ["TypeScript", "AWS", "Terraform", "Astro", "React", "Algolia", "Sanity"],
+    github: "https://github.com/atarico/vidriera",
     demo: null,
-    featured: true,
-    image: turnosImg,
-    imageAlt:
-      "Landing de la plataforma con el titular \"Tu agenda llena, sin mover un dedo\" y una tarjeta de próximo turno confirmado junto a la grilla de horarios disponibles.",
+    featured: false,
+  },
+  {
+    title: "Sistema de Inscripción de Proveedores",
+    status: "Producción",
+    description:
+      "Desafío técnico de la Municipalidad de San Nicolás, superado con holgura (5 de 5 bonus) con backend y frontend completos en 10 días: API REST con JWT en cookies httpOnly, máquina de estados, archivos en Cloudflare R2 y notificaciones en tiempo real. Más de 1.500 tests escritos con TDD.",
+    tech: ["Node.js", "Express", "TypeScript", "PostgreSQL", "Prisma", "XState", "Socket.io", "React"],
+    github: "https://github.com/atarico/backendproveedores",
+    demo: null,
+    featured: false,
+  },
+  {
+    title: "Portfolio Agent",
+    status: "Producción",
+    description:
+      "Agente de IA que responde sobre un portfolio de GitHub consultando datos en vivo mediante un servidor MCP propio (HTTP y stdio), con proveedor de LLM configurable (Gemini o Groq). Endpoints con rate limiting por IP y validación con Zod, cubiertos por 137 tests que corren sin red.",
+    tech: ["Next.js 16", "TypeScript", "Vercel AI SDK", "MCP", "Zod", "Vitest"],
+    github: "https://github.com/atarico/portfolio-agent",
+    demo: null,
+    featured: false,
   },
   {
     title: "Material didáctico UTN",
     status: "Producción",
     description:
-      "Repositorios de estudio y ejercitaciones que uso como docente en la Tecnicatura Superior en Programación: Programación III (JavaScript moderno, HTML5, CSS3 e introducción a React), Programación IV y Programación Orientada a Objetos en C#. Más de 70 estrellas entre los tres, usados por alumnos cursada tras cursada. El enlace apunta al de Programación III, el más usado de los tres.",
+      "Repositorios de estudio y ejercitaciones que uso como docente en la Tecnicatura Superior en Programación: Programación III (JavaScript moderno, HTML5, CSS3 e introducción a React), Programación IV y Programación Orientada a Objetos en C#. 72 estrellas entre los tres, usados por alumnos cursada tras cursada. El enlace apunta al de Programación III, el más usado de los tres.",
     tech: ["JavaScript", "HTML", "CSS", "React", "C#"],
     github: "https://github.com/atarico/UTN-programacion3",
     demo: null,
