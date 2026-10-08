@@ -13,17 +13,29 @@ interface Category {
 const categories: Category[] = [
   {
     icon: '📦',
+    label: 'lenguajes',
+    pkg: 'lenguajes@latest',
+    skills: [
+      { name: 'TypeScript' },
+      { name: 'JavaScript (ES6+)' },
+      { name: 'Python' },
+      { name: 'SQL' },
+      { name: 'C# (ASP.NET Core)' },
+    ],
+  },
+  {
+    icon: '📦',
     label: 'frontend',
     pkg: 'frontend@latest',
     skills: [
-      { name: 'TypeScript',         },
-      { name: 'React.js',           },
-      { name: 'Astro.js',           },
-      { name: 'Next.js',            },
-      { name: 'JavaScript (ES6+)',  },
-      { name: 'HTML5',              },
-      { name: 'CSS3',               },
-      { name: 'Tailwind CSS',       },
+      { name: 'React 19' },
+      { name: 'Next.js 16' },
+      { name: 'React Native (Expo)' },
+      { name: 'Astro' },
+      { name: 'Tailwind CSS' },
+      { name: 'TanStack Query' },
+      { name: 'PWA' },
+      { name: 'SEO técnico' },
     ],
   },
   {
@@ -31,29 +43,62 @@ const categories: Category[] = [
     label: 'backend & db',
     pkg: 'backend-db@latest',
     skills: [
-      { name: 'Node.js',    },
-      { name: 'Python',     },
-      { name: 'C#',         },
-      { name: 'C++',        },
-      { name: 'SQL',        },
-      { name: 'PostgreSQL', },
-      { name: 'SQLite',     },
-      { name: 'Supabase',   },
+      { name: 'Node.js' },
+      { name: 'Express' },
+      { name: 'NestJS' },
+      { name: 'FastAPI' },
+      { name: 'APIs REST' },
+      { name: 'WebSockets' },
+      { name: 'PostgreSQL' },
+      { name: 'Supabase' },
+      { name: 'Prisma ORM' },
+      { name: 'MongoDB' },
+      { name: 'Row-Level Security' },
+      { name: 'JWT / OAuth / RBAC' },
+      { name: 'Mercado Pago' },
     ],
   },
   {
     icon: '📦',
-    label: 'tools',
-    pkg: 'tools@latest',
+    label: 'cloud & devops',
+    pkg: 'cloud-devops@latest',
     skills: [
-      { name: 'Git',         },
-      { name: 'GitHub',      },
-      { name: 'pnpm',        },
-      { name: 'Vercel',      },
-      { name: 'REST APIs',   },
-      { name: 'Claude Code', },
-      { name: 'opencode',    },
-      { name: 'Scrum',       },
+      { name: 'AWS (Lambda, SQS, ECS Fargate, S3, CloudFront)' },
+      { name: 'Terraform' },
+      { name: 'Docker' },
+      { name: 'GitHub Actions (CI/CD)' },
+      { name: 'Vercel' },
+      { name: 'Railway' },
+      { name: 'Cloudflare R2' },
+      { name: 'Linux' },
+    ],
+  },
+  {
+    icon: '📦',
+    label: 'testing',
+    pkg: 'testing@latest',
+    skills: [
+      { name: 'TDD' },
+      { name: 'Vitest' },
+      { name: 'Testing Library' },
+      { name: 'Playwright (E2E)' },
+    ],
+  },
+  {
+    icon: '📦',
+    label: 'ia, seguridad & métodos',
+    pkg: 'ia-seguridad@latest',
+    skills: [
+      { name: 'Agentes de IA' },
+      { name: 'MCP' },
+      { name: 'Vercel AI SDK' },
+      { name: 'LLMs' },
+      { name: 'OWASP Top 10 / CWE' },
+      { name: 'SAST' },
+      { name: 'Arquitectura hexagonal' },
+      { name: 'Clean Architecture / SOLID' },
+      { name: 'Scrum' },
+      { name: 'Code review' },
     ],
   },
 ];
@@ -226,7 +271,7 @@ const categories: Category[] = [
   }
 
   .card-pkg {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--text-accent);
     letter-spacing: 0.06em;
     text-shadow: var(--glow-sm);
@@ -260,7 +305,7 @@ const categories: Category[] = [
   .tree-connector {
     color: var(--text-muted);
     opacity: 0.45;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     letter-spacing: -0.04em;
     user-select: none;
     white-space: nowrap;
@@ -288,7 +333,7 @@ const categories: Category[] = [
     align-items: center;
     gap: 0.4rem;
     padding: 0.55rem 0.9rem 0.75rem;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     user-select: none;
   }

@@ -1,5 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import portrait from '../assets/agustin-tarico.png';
+import { yearsOfExperience } from '../config/site';
 
 // Todo el hero cierra en pills. Las dos primeras son las acciones de la página y
 // apuntan a secciones propias, así que no llevan target/rel de link externo.
@@ -20,6 +23,8 @@ const actions = [
   <!-- ── Contenido ── -->
   <div class="hero-content">
 
+    <div class="hero-text">
+
     <!-- Línea decorativa de terminal -->
     <span class="hero-item hero-comment" style="animation-delay: 0ms">
       // portfolio.init()
@@ -30,10 +35,24 @@ const actions = [
       <span class="greeting-arrow">&gt;&nbsp;</span>Hola, soy
     </p>
 
-    <!-- Nombre -->
-    <h1 class="hero-item hero-name" style="animation-delay: 260ms">
-      Agustín<br class="sm:hidden" /> Tarico
-    </h1>
+    <!-- Nombre + foto: en mobile comparten fila y la foto queda centrada con el h1 -->
+    <div class="hero-name-row">
+      <h1 class="hero-item hero-name" style="animation-delay: 260ms">
+        Agustín<br class="sm:hidden" /> Tarico
+      </h1>
+
+      <!-- Foto: recorte sin fondo; el difuminado inferior lo da el mask de CSS -->
+      <div class="hero-item hero-photo" style="animation-delay: 300ms">
+        <Image
+          src={portrait}
+          alt="Agustín Tarico sonriendo, con una remera negra con un mapa de subte de colores."
+          widths={[200, 400, 600, 900]}
+          sizes="(min-width: 768px) 14.5rem, 8.5rem"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
 
     <!-- Typing effect -->
     <div class="hero-item hero-typing-row" style="animation-delay: 450ms">
@@ -43,8 +62,8 @@ const actions = [
 
     <!-- Bio -->
     <p class="hero-item hero-bio" style="animation-delay: 620ms">
-      <strong>+3 años de experiencia.</strong> Software Developer, ex profesor de
-      programación en la UTN. Especializado en desarrollo de aplicaciones web.
+      <strong>{yearsOfExperience} años de experiencia.</strong> Full Stack Developer, ex profesor de
+      programación en la UTN. Construyo aplicaciones web y automatizo procesos.
       Programo porque <em>me encanta</em>.
     </p>
 
@@ -63,12 +82,13 @@ const actions = [
       ))}
     </div>
 
+    </div>
   </div>
 </section>
 
 <!-- ── Typing effect: JS vanilla ── -->
 <script>
-  const phrases: string[] = ['Software Developer', 'Ex profesor en la UTN', 'React - Astro - Supabase 🫶'];
+  const phrases: string[] = ['Full Stack Developer', 'Dev + IA Agent', 'Profesor de Programación'];
   const el       = document.getElementById('typed-text');
   let current    = 0;
   let charIndex  = 0;
@@ -154,9 +174,59 @@ const actions = [
     width: 100%;
     max-width: 64rem;
     margin: 0 auto;
+  }
+
+  .hero-text {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  /* Mobile: el h1 y la foto en la misma fila, centrados en vertical */
+  .hero-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  /* ── Foto ── */
+  /* El PNG ya viene sin fondo. El mask funde el borde inferior con el fondo de la
+     sección para que el recorte del torso no termine en una línea recta. */
+  .hero-photo {
+    width: clamp(6.5rem, 30vw, 8.5rem);
+    flex-shrink: 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+
+  .hero-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Desktop: la foto sale de la fila del nombre y ocupa una columna a la derecha,
+     centrada en vertical respecto de todo el bloque de texto. El padding derecho
+     del contenido le reserva ese espacio. */
+  @media (min-width: 768px) {
+    .hero-content {
+      --photo-w: clamp(10.5rem, 18vw, 14.5rem);
+      padding-right: calc(var(--photo-w) + 2.5rem);
+    }
+
+    .hero-name-row {
+      display: block;
+    }
+
+    .hero-photo {
+      position: absolute;
+      right: 0;
+      inset-block: 0;
+      margin-block: auto;
+      height: fit-content;
+      width: var(--photo-w);
+    }
   }
 
   /* ── Animación de entrada: fadeInUp ── */

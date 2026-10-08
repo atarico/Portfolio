@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 
-import { projects } from '../data/projects';
+import { projects, type Project } from '../data/projects';
 
 // SVG paths como constantes para mantener el template limpio
 const ICON_GITHUB = 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z';
@@ -11,6 +11,13 @@ const ICON_EXTERNAL = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 
 // el resto va al grid con la descripción recortada.
 const highlighted = projects.filter((p) => p.featured);
 const secondary = projects.filter((p) => !p.featured);
+
+// Sufijo de clase por estado: arma `status-*` (punto) y `badge-*` (etiqueta)
+const statusKey: Record<Project['status'], string> = {
+  'Producción': 'prod',
+  'En desarrollo': 'dev',
+  'Open source': 'oss',
+};
 ---
 
 <section id="projects" class="projects-section" aria-labelledby="projects-title">
@@ -37,13 +44,13 @@ const secondary = projects.filter((p) => !p.featured);
           <header class="card-titlebar">
             <div class="card-titlebar-left">
               <span
-                class={`status-dot ${project.status === 'Producción' ? 'status-prod' : 'status-dev'}`}
+                class={`status-dot status-${statusKey[project.status]}`}
                 title={project.status}
                 aria-label={project.status}
               />
               <span class="card-title">{project.title}</span>
             </div>
-            <span class={`status-badge ${project.status === 'Producción' ? 'badge-prod' : 'badge-dev'}`}>
+            <span class={`status-badge badge-${statusKey[project.status]}`}>
               {project.status}
             </span>
           </header>
@@ -143,13 +150,13 @@ const secondary = projects.filter((p) => !p.featured);
           <header class="card-titlebar">
             <div class="card-titlebar-left">
               <span
-                class={`status-dot ${project.status === 'Producción' ? 'status-prod' : 'status-dev'}`}
+                class={`status-dot status-${statusKey[project.status]}`}
                 title={project.status}
                 aria-label={project.status}
               />
               <span class="card-title">{project.title}</span>
             </div>
-            <span class={`status-badge ${project.status === 'Producción' ? 'badge-prod' : 'badge-dev'}`}>
+            <span class={`status-badge badge-${statusKey[project.status]}`}>
               {project.status}
             </span>
           </header>
@@ -531,7 +538,7 @@ const secondary = projects.filter((p) => !p.featured);
      `.card-description { flex: 1 }` tiene la misma especificidad y ganaba,
      estirando la caja y abriendo un hueco antes de los tags. */
   .stack-card .card-description {
-    font-size: 0.85rem;
+    font-size: 1rem;
     flex: 0 0 auto;
   }
 
@@ -620,6 +627,12 @@ const secondary = projects.filter((p) => !p.featured);
     animation: pulse-dev 1.8s ease-in-out infinite;
   }
 
+  /* Open source: terminado y publicado, sin despliegue propio */
+  .status-oss {
+    background: #5ccfe6;
+    box-shadow: 0 0 5px rgba(92, 207, 230, 0.6);
+  }
+
   @keyframes pulse-dev {
     0%, 100% { opacity: 1;   box-shadow: 0 0 5px  rgba(254, 188, 46, 0.6); }
     50%       { opacity: 0.5; box-shadow: 0 0 12px rgba(254, 188, 46, 0.3); }
@@ -631,7 +644,7 @@ const secondary = projects.filter((p) => !p.featured);
 
   /* ── Status badge ── */
   .status-badge {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.15rem 0.5rem;
@@ -652,6 +665,12 @@ const secondary = projects.filter((p) => !p.featured);
     border: 1px solid rgba(254, 188, 46, 0.25);
   }
 
+  .badge-oss {
+    color: #5ccfe6;
+    background: rgba(92, 207, 230, 0.08);
+    border: 1px solid rgba(92, 207, 230, 0.25);
+  }
+
   /* ── Cuerpo de la card ── */
   .card-body {
     display: flex;
@@ -662,7 +681,7 @@ const secondary = projects.filter((p) => !p.featured);
   }
 
   .card-description {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--text-muted);
     line-height: 1.75;
     flex: 1;
@@ -713,7 +732,7 @@ const secondary = projects.filter((p) => !p.featured);
     background: none;
     border: 0;
     font: inherit;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     letter-spacing: 0.06em;
     color: var(--text-accent);
     cursor: pointer;
@@ -753,7 +772,7 @@ const secondary = projects.filter((p) => !p.featured);
   }
 
   .tag {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     letter-spacing: 0.07em;
     padding: 0.2rem 0.55rem;
     border: 1px solid var(--border-accent);
@@ -786,7 +805,7 @@ const secondary = projects.filter((p) => !p.featured);
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     padding: 0.35rem 0.9rem;

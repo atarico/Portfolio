@@ -1,5 +1,7 @@
 ---
-const stack = ['TypeScript', 'React', 'Astro', 'Node.js', 'Supabase'];
+import { yearsOfExperience } from '../config/site';
+
+const stack = ['TypeScript', 'React', 'Next.js', 'Node.js', 'PostgreSQL'];
 
 interface Stat {
   key: string;
@@ -8,7 +10,8 @@ interface Stat {
 
 const stats: Stat[] = [
   { key: 'ubicación',   value: 'Buenos Aires, Argentina'  },
-  { key: 'rol_actual',  value: 'Software Developer'       },
+  { key: 'rol_actual',  value: 'Full Stack Developer'     },
+  { key: 'experiencia', value: `${yearsOfExperience} años`    },
   { key: 'stack',       value: stack                      },
   { key: 'educación',   value: 'Ing. Sistemas (en curso)' },
   { key: 'café_por_día', value: 3                         },
@@ -34,23 +37,24 @@ const stats: Stat[] = [
       <div class="about-text reveal" style="transition-delay: 120ms">
 
         <p class="about-paragraph">
-          Soy desarrollador de Software enfocado en el ecosistema
-          JavaScript/TypeScript. Actualmente curso Ingeniería en Sistemas en
-          la UTN y fui profesor de Programación III en la Tecnicatura Superior
-          en Programación de la misma universidad.
+          Soy Full Stack Developer y construyo aplicaciones web en producción
+          con TypeScript, React/Next.js, Node.js y PostgreSQL. Convierto
+          requerimientos de clientes no técnicos en sistemas que se usan todos
+          los días. Curso Ingeniería en Sistemas en la UTN, donde fui profesor
+          titular de Programación I a IV.
         </p>
 
         <p class="about-paragraph">
-          Dar clases me entrenó para explicar cosas complejas de manera
-          simple. Eso mismo aplico en los equipos donde trabajo: comunicar
-          decisiones técnicas sin vueltas.
+          Puse en producción en 2 meses la plataforma de gestión de un centro
+          cultural, llevé un SaaS multi-tenant a suscripciones pagas con
+          aislamiento de datos por Row-Level Security y desplegué en AWS una
+          plataforma serverless con Terraform.
         </p>
 
         <p class="about-paragraph">
-          Trabajo principalmente con React, Astro, Next.js, Node.js y Supabase. Pero tengo conocimientos en lenguajes como C++, C#, Python, Rust y Go. Lo que más
-          disfruto es llevar ideas a producción: una app de geolocalización
-          de farmacias, un sistema que evalua skills antes de instalarlas, un sistema de entradas para un centro cultural, un
-          gestor de llaves para la UTN, una web para un broker de seguros.
+          Trabajo con TDD y CI/CD, y dar clases me entrenó para explicar cosas
+          complejas de manera simple: comunico las decisiones técnicas sin
+          vueltas. Lo que más disfruto es llevar ideas a producción.
         </p>
       </div>
 
@@ -210,7 +214,7 @@ const stats: Stat[] = [
 
   .terminal-title {
     margin-left: 0.5rem;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     letter-spacing: 0.04em;
   }

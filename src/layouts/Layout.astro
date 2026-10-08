@@ -6,6 +6,7 @@ import jetbrainsMono400Url from '@fontsource/jetbrains-mono/files/jetbrains-mono
 import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { yearsOfExperience } from '../config/site';
 
 interface Props {
   title?: string;
@@ -14,8 +15,8 @@ interface Props {
 }
 
 const {
-  title       = 'Agustín Tarico | Desarrollador Web',
-  description = 'Software Developer especializado en desarrollo de aplicaciones web. +3 años de experiencia con TypeScript, React y Astro. Ex profesor de Programación en la UTN.',
+  title       = 'Agustín Tarico | Full Stack Developer',
+  description = `Full Stack Developer con ${yearsOfExperience} años de experiencia construyendo aplicaciones web en producción con TypeScript, React/Next.js, Node.js y PostgreSQL. Ex profesor de Programación en la UTN.`,
   ogImage     = '/og-image.png',
 } = Astro.props;
 
