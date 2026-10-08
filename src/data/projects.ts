@@ -59,13 +59,33 @@ export const projects: Project[] = [
       "Pantalla principal mostrando la fecha y hora actual, el turno activo con su rango horario y el mapa de San Nicolás con las farmacias marcadas.",
   },
   {
-    title: "Gestor de llaves UTN",
+    title: "Vidriera",
     status: "Producción",
     description:
-      "Un sistema de gestión para el control, préstamo y devolución de llaves en la Universidad Tecnológica Nacional (UTN). Actualmente está en beta: se siguen sumando funcionalidades.",
-    tech: ["React", "TypeScript", "Tailwind CSS", "Wouter"],
-    github: "https://github.com/atarico/utn-llaves",
-    demo: "https://llaves-utn.netlify.app/",
+      "Catálogo online para comercios chicos con pedido por WhatsApp, alternativa a Tienda Nube o la comisión de Mercado Libre, con un costo de operación de USD 0 a 1 por mes. Tienda estática en S3 + CloudFront, infraestructura en Terraform y pipeline de indexado orientado a eventos (Lambda, SQS, DLQ), con arquitectura hexagonal y 209 tests.",
+    tech: ["TypeScript", "AWS", "Terraform", "Astro", "React", "Algolia", "Sanity"],
+    github: "https://github.com/atarico/vidriera",
+    demo: null,
+    featured: false,
+  },
+  {
+    title: "fix-cv-find-job-skill",
+    status: "Producción",
+    description:
+      "Skill open source para Claude que audita un CV como un reclutador, lo reescribe listo para ATS, busca ofertas en los portales que usa la persona, se postula por ella, alinea LinkedIn y clasifica las respuestas del inbox. Funciona para cualquier industria y nunca decide por el usuario lo que le corresponde decidir. Versión 0.4.0.",
+    tech: ["Claude Code", "Agentes de IA", "Skills", "Markdown"],
+    github: "https://github.com/atarico/fix-cv-find-job-skill",
+    demo: null,
+    featured: false,
+  },
+  {
+    title: "Bot de turnos por WhatsApp",
+    status: "En desarrollo",
+    description:
+      "Bot multi-tenant de WhatsApp que responde solo, le dice al cliente si tiene un turno y lo guía para reservarlo, usando el Google Calendar del negocio como única fuente de verdad. Un solo despliegue atiende a varios negocios y un simulador local reproduce el payload exacto de la Cloud API de Meta. 64 tests.",
+    tech: ["Python", "FastAPI", "Docker", "Google Calendar API", "WhatsApp Cloud API"],
+    github: "https://github.com/atarico/bot-turnos",
+    demo: null,
     featured: false,
   },
   {
@@ -79,6 +99,16 @@ export const projects: Project[] = [
     featured: false,
   },
   {
+    title: "Portfolio Agent",
+    status: "Producción",
+    description:
+      "Agente de IA que responde sobre un portfolio de GitHub consultando datos en vivo mediante un servidor MCP propio (HTTP y stdio), con proveedor de LLM configurable (Gemini o Groq). Endpoints con rate limiting por IP y validación con Zod, cubiertos por 137 tests que corren sin red.",
+    tech: ["Next.js 16", "TypeScript", "Vercel AI SDK", "MCP", "Zod", "Vitest"],
+    github: "https://github.com/atarico/portfolio-agent",
+    demo: null,
+    featured: false,
+  },
+  {
     title: "Estación Primera — plataforma de gestión",
     status: "Producción",
     description:
@@ -86,16 +116,6 @@ export const projects: Project[] = [
     tech: ["Next.js 16", "React 19", "TypeScript", "Supabase"],
     github: null,
     demo: "https://ep-cantina-entradas.vercel.app/",
-    featured: false,
-  },
-  {
-    title: "Vidriera",
-    status: "Producción",
-    description:
-      "Catálogo online para comercios chicos con pedido por WhatsApp, alternativa a Tienda Nube o la comisión de Mercado Libre, con un costo de operación de USD 0 a 1 por mes. Tienda estática en S3 + CloudFront, infraestructura en Terraform y pipeline de indexado orientado a eventos (Lambda, SQS, DLQ), con arquitectura hexagonal y 209 tests.",
-    tech: ["TypeScript", "AWS", "Terraform", "Astro", "React", "Algolia", "Sanity"],
-    github: "https://github.com/atarico/vidriera",
-    demo: null,
     featured: false,
   },
   {
@@ -109,13 +129,13 @@ export const projects: Project[] = [
     featured: false,
   },
   {
-    title: "Portfolio Agent",
+    title: "Gestor de llaves UTN",
     status: "Producción",
     description:
-      "Agente de IA que responde sobre un portfolio de GitHub consultando datos en vivo mediante un servidor MCP propio (HTTP y stdio), con proveedor de LLM configurable (Gemini o Groq). Endpoints con rate limiting por IP y validación con Zod, cubiertos por 137 tests que corren sin red.",
-    tech: ["Next.js 16", "TypeScript", "Vercel AI SDK", "MCP", "Zod", "Vitest"],
-    github: "https://github.com/atarico/portfolio-agent",
-    demo: null,
+      "Un sistema de gestión para el control, préstamo y devolución de llaves en la Universidad Tecnológica Nacional (UTN). Actualmente está en beta: se siguen sumando funcionalidades.",
+    tech: ["React", "TypeScript", "Tailwind CSS", "Wouter"],
+    github: "https://github.com/atarico/utn-llaves",
+    demo: "https://llaves-utn.netlify.app/",
     featured: false,
   },
   {
