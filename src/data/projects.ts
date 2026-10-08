@@ -6,7 +6,7 @@ import turnosImg from "../assets/projects/turnos-multi-tenant.png";
 
 export interface Project {
   title: string;
-  status: "Producción" | "En desarrollo";
+  status: "Producción" | "En desarrollo" | "Open source";
   description: string;
   tech: string[];
   github: string | null;
@@ -70,7 +70,7 @@ export const projects: Project[] = [
   },
   {
     title: "fix-cv-find-job-skill",
-    status: "Producción",
+    status: "Open source",
     description:
       "Skill open source para Claude que audita un CV como un reclutador, lo reescribe listo para ATS, busca ofertas en los portales que usa la persona, se postula por ella, alinea LinkedIn y clasifica las respuestas del inbox. Funciona para cualquier industria y nunca decide por el usuario lo que le corresponde decidir. Versión 0.4.0.",
     tech: ["Claude Code", "Agentes de IA", "Skills", "Markdown"],
@@ -80,7 +80,7 @@ export const projects: Project[] = [
   },
   {
     title: "Bot de turnos por WhatsApp",
-    status: "En desarrollo",
+    status: "Open source",
     description:
       "Bot multi-tenant de WhatsApp que responde solo, le dice al cliente si tiene un turno y lo guía para reservarlo, usando el Google Calendar del negocio como única fuente de verdad. Un solo despliegue atiende a varios negocios y un simulador local reproduce el payload exacto de la Cloud API de Meta. 64 tests.",
     tech: ["Python", "FastAPI", "Docker", "Google Calendar API", "WhatsApp Cloud API"],
