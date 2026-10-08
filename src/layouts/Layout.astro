@@ -67,8 +67,10 @@ const ogImageURL   = new URL(ogImage, Astro.site ?? 'https://atarico.dev');
     <meta name="twitter:image"       content={ogImageURL} />
 
     <!-- Favicon -->
+    <!-- .ico con sizes para navegadores viejos; el SVG lo eligen los que lo soportan -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/x-icon"  href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body>
     <!-- Skip to content (accesibilidad / teclado) -->
