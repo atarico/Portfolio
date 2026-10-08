@@ -5,6 +5,7 @@ interface Skill {
 
 interface Category {
   icon: string;
+  emoji: string; // segundo ícono, propio de cada categoría
   label: string;
   pkg: string; // nombre del "paquete" en la línea de header
   skills: Skill[];
@@ -13,6 +14,7 @@ interface Category {
 const categories: Category[] = [
   {
     icon: '📦',
+    emoji: '⌨️',
     label: 'lenguajes',
     pkg: 'lenguajes@latest',
     skills: [
@@ -25,6 +27,7 @@ const categories: Category[] = [
   },
   {
     icon: '📦',
+    emoji: '🎨',
     label: 'frontend',
     pkg: 'frontend@latest',
     skills: [
@@ -40,6 +43,7 @@ const categories: Category[] = [
   },
   {
     icon: '📦',
+    emoji: '🛠️',
     label: 'backend & db',
     pkg: 'backend-db@latest',
     skills: [
@@ -60,6 +64,7 @@ const categories: Category[] = [
   },
   {
     icon: '📦',
+    emoji: '☁️',
     label: 'cloud & devops',
     pkg: 'cloud-devops@latest',
     skills: [
@@ -75,6 +80,7 @@ const categories: Category[] = [
   },
   {
     icon: '📦',
+    emoji: '🧪',
     label: 'testing',
     pkg: 'testing@latest',
     skills: [
@@ -86,6 +92,7 @@ const categories: Category[] = [
   },
   {
     icon: '📦',
+    emoji: '🤖',
     label: 'ia, seguridad & métodos',
     pkg: 'ia-seguridad@latest',
     skills: [
@@ -135,6 +142,7 @@ const categories: Category[] = [
           <!-- Header tipo npm/pnpm output -->
           <div class="card-header">
             <span class="card-icon" aria-hidden="true">{cat.icon}</span>
+            <span class="card-icon" aria-hidden="true">{cat.emoji}</span>
             <span class="card-pkg">{cat.pkg}</span>
           </div>
 
