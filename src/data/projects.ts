@@ -118,34 +118,4 @@ export const projects: Project[] = [
     demo: "https://ep-cantina-entradas.vercel.app/",
     featured: false,
   },
-  {
-    title: "Sistema de Inscripción de Proveedores",
-    status: "Producción",
-    description:
-      "Desafío técnico de la Municipalidad de San Nicolás, superado con holgura (5 de 5 bonus) con backend y frontend completos en 10 días: API REST con JWT en cookies httpOnly, máquina de estados, archivos en Cloudflare R2 y notificaciones en tiempo real. Más de 1.500 tests escritos con TDD.",
-    tech: ["Node.js", "Express", "TypeScript", "PostgreSQL", "Prisma", "XState", "Socket.io", "React"],
-    github: "https://github.com/atarico/backendproveedores",
-    demo: null,
-    featured: false,
-  },
-  {
-    title: "Gestor de llaves UTN",
-    status: "Producción",
-    description:
-      "Un sistema de gestión para el control, préstamo y devolución de llaves en la Universidad Tecnológica Nacional (UTN). Actualmente está en beta: se siguen sumando funcionalidades.",
-    tech: ["React", "TypeScript", "Tailwind CSS", "Wouter"],
-    github: "https://github.com/atarico/utn-llaves",
-    demo: "https://llaves-utn.netlify.app/",
-    featured: false,
-  },
-  {
-    title: "Material didáctico UTN",
-    status: "Producción",
-    description:
-      "Repositorios de estudio y ejercitaciones que uso como docente en la Tecnicatura Superior en Programación: Programación III (JavaScript moderno, HTML5, CSS3 e introducción a React), Programación IV y Programación Orientada a Objetos en C#. 72 estrellas entre los tres, usados por alumnos cursada tras cursada. El enlace apunta al de Programación III, el más usado de los tres.",
-    tech: ["JavaScript", "HTML", "CSS", "React", "C#"],
-    github: "https://github.com/atarico/UTN-programacion3",
-    demo: null,
-    featured: false,
-  },
 ];
