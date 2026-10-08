@@ -29,7 +29,7 @@ const actions = [
         src={portrait}
         alt="Agustín Tarico sonriendo, con una remera negra con un mapa de subte de colores."
         widths={[200, 400, 600, 900]}
-        sizes="(min-width: 768px) 22rem, 10rem"
+        sizes="(min-width: 768px) 14.5rem, 8.5rem"
         loading="eager"
         fetchpriority="high"
       />
@@ -186,9 +186,13 @@ const actions = [
   /* ── Foto ── */
   /* El PNG ya viene sin fondo. El mask funde el borde inferior con el fondo de la
      sección para que el recorte del torso no termine en una línea recta. */
+  /* Mobile: sale del flujo y se ubica arriba a la derecha, al lado del saludo y del
+     nombre, que son líneas cortas; termina antes de la fila del tipeo. */
   .hero-photo {
-    width: 10rem;
-    align-self: flex-start;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: clamp(6.5rem, 30vw, 8.5rem);
     -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
             mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
   }
@@ -214,9 +218,9 @@ const actions = [
     }
 
     .hero-photo {
-      width: clamp(16rem, 28vw, 22rem);
+      position: static;
+      width: clamp(10.5rem, 18vw, 14.5rem);
       flex-shrink: 0;
-      align-self: auto;
     }
   }
 
