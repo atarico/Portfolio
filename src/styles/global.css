@@ -238,3 +238,44 @@ html.js .reveal.is-visible {
     transform: none !important;
   }
 }
+
+/* ─── View transitions entre páginas ────────────────────────────────────────────
+   Cross-document y sin JS (el CSP no permite scripts inline y no hace falta el
+   router de Astro): cada navegación same-origin, link o botón atrás, anima el
+   cambio de página. Los navegadores sin soporte navegan normal. Con reduced-motion
+   no se activa. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* La página vieja se borra hacia arriba y la nueva se "imprime" de arriba hacia
+   abajo, como la salida de una terminal. */
+::view-transition-old(root) {
+  animation: vt-page-out 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-page-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+@keyframes vt-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-1rem);
+    filter: blur(2px);
+  }
+}
+
+@keyframes vt-page-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
