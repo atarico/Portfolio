@@ -36,10 +36,10 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
         class="logo flex items-center shrink-0"
         aria-label="Agustín Tarico — inicio"
       >
-        <span class="text-muted" aria-hidden="true">~/</span>
+        <span class="text-body/60" aria-hidden="true">~/</span>
         <span class="text-accent font-medium">atarico</span>
       </a>
-      <span class="text-muted ml-2 shrink-0" aria-hidden="true">$</span>
+      <span class="text-body/60 ml-2 shrink-0" aria-hidden="true">$</span>
       <span id="nav-cmd" class="nav-cmd" aria-hidden="true"></span>
       <span class="cursor-blink shrink-0 ml-1 text-accent font-bold" aria-hidden="true">_</span>
     </div>
@@ -51,7 +51,7 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
           <a
             href={href}
             data-cmd={cmd}
-            class="nav-link text-muted hover:text-accent text-sm tracking-wider uppercase transition-colors duration-200"
+            class="nav-link text-body/80 hover:text-accent text-sm tracking-wider uppercase transition-colors duration-200"
             aria-current="false"
           >
             {label}
@@ -95,6 +95,26 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
       ))}
     </ul>
   </div>
+
+  <!-- Refracción de la píldora. Solo Chromium aplica filtros SVG en backdrop-filter;
+       el script dibuja el mapa de desplazamiento con el tamaño real de la píldora y
+       mueve la intensidad con el scroll. -->
+  <svg class="nav-glass-defs" aria-hidden="true" focusable="false">
+    <filter id="nav-glass" color-interpolation-filters="sRGB">
+      <feImage id="nav-glass-map" x="0" y="0" preserveAspectRatio="none" result="map" />
+      <feDisplacementMap
+        id="nav-glass-displace"
+        in="SourceGraphic"
+        in2="map"
+        scale="0"
+        xChannelSelector="R"
+        yChannelSelector="G"
+        result="refracted"
+      />
+      <feGaussianBlur id="nav-glass-blur" in="refracted" stdDeviation="0" result="soft" />
+      <feColorMatrix id="nav-glass-saturate" in="soft" type="saturate" values="1" />
+    </filter>
+  </svg>
 </header>
 
 <script>
@@ -203,6 +223,91 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
   };
 
   /* ────────────────────────────────────────────────
+   * Vidrio líquido: refracción de lo que pasa detrás de la píldora.
+   * Solo Chromium aplica filtros SVG en backdrop-filter, y `userAgentData` solo
+   * existe en Chromium. El resto se queda con el vidrio esmerilado de CSS.
+   * ──────────────────────────────────────────────── */
+  const pill          = navbar.querySelector<HTMLElement>('.nav-pill')!;
+  const glassMap      = document.getElementById('nav-glass-map')!;
+  const glassDisplace = document.getElementById('nav-glass-displace')!;
+  const glassBlur     = document.getElementById('nav-glass-blur')!;
+  const glassSaturate = document.getElementById('nav-glass-saturate')!;
+  const refracts      = 'userAgentData' in navigator;
+
+  // Desplazamiento máximo con la píldora llena, relativo a su radio. Con el perfil
+  // cuadrático del mapa, arriba de 0.5 el canto pliega la imagen como el borde de un
+  // vidrio real; 0.6 deja ese pliegue fino sin dar vuelta todo lo que pasa detrás.
+  const GLASS_STRENGTH = 0.6;
+  let glassScale = 0;
+
+  // Mapa de desplazamiento: cada píxel cerca del borde toma la imagen de un punto
+  // más adentro, así lo que pasa por detrás se estira y se curva como en el canto
+  // de un vidrio grueso. En el eje central no hay desplazamiento.
+  // R codifica el desplazamiento en x y G en y; 128 es neutro.
+  const drawGlassMap = () => {
+    const w = Math.round(pill.offsetWidth);
+    const h = Math.round(pill.offsetHeight);
+    if (!w || !h) return;
+
+    const r = h / 2; // border-radius: 9999px, los extremos son semicírculos
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d')!;
+    const map = ctx.createImageData(w, h);
+
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        // Vector desde el eje central de la píldora hasta el píxel.
+        const ox = x + 0.5 - w / 2;
+        const dx = Math.sign(ox) * Math.max(Math.abs(ox) - (w / 2 - r), 0);
+        const dy = y + 0.5 - h / 2;
+        const dist = Math.hypot(dx, dy);
+
+        let vx = 0;
+        let vy = 0;
+        if (dist > 0 && dist < r) {
+          const edge = (dist / r) ** 2; // 0 en el eje, 1 en el borde
+          vx = (-dx / dist) * edge;
+          vy = (-dy / dist) * edge;
+        }
+
+        const i = (y * w + x) * 4;
+        map.data[i]     = 128 + vx * 127;
+        map.data[i + 1] = 128 + vy * 127;
+        map.data[i + 2] = 128;
+        map.data[i + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(map, 0, 0);
+    glassMap.setAttribute('href', canvas.toDataURL());
+    glassMap.setAttribute('width', String(w));
+    glassMap.setAttribute('height', String(h));
+    // feDisplacementMap desplaza `scale * (canal - 0.5)`: el doble del máximo.
+    glassScale = 2 * GLASS_STRENGTH * r;
+  };
+
+  // La intensidad sigue a `--navbar-fill`, igual que el tinte y el borde: en el tope
+  // de la página la píldora no se ve y tampoco deforma lo que tiene detrás.
+  const updateGlass = () => {
+    const fill = parseFloat(getComputedStyle(pill).getPropertyValue('--navbar-fill')) || 0;
+    glassDisplace.setAttribute('scale', String(glassScale * fill));
+    glassBlur.setAttribute('stdDeviation', String(2.5 * fill));
+    glassSaturate.setAttribute('values', String(1 + 0.6 * fill));
+  };
+
+  if (refracts) {
+    navbar.classList.add('navbar-refract');
+    drawGlassMap();
+    // El ancho cambia con el layout (mobile/desktop) y cuando cargan las fuentes.
+    new ResizeObserver(() => {
+      drawGlassMap();
+      updateGlass();
+    }).observe(pill);
+  }
+
+  /* ────────────────────────────────────────────────
    * Scroll: fondo semi-transparente + scrollspy.
    * Un solo listener, throttled con requestAnimationFrame.
    * ──────────────────────────────────────────────── */
@@ -210,6 +315,7 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
 
   const onScroll = () => {
     navbar.classList.toggle('navbar-scrolled', window.scrollY > 30);
+    if (refracts) updateGlass();
     const current = getActiveSection();
     if (current !== lastActive) {
       lastActive = current;
@@ -258,14 +364,57 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
 
   /* El fondo se deriva por completo de `--navbar-fill` (0 → 1, registrada en
      global.css). Así el estado "lleno" se declara una sola vez y las dos rutas de
-     abajo solo mueven el número. */
+     abajo solo mueven el número.
+     Vidrio al estilo del dock de macOS: tinte oscuro translúcido con un velo claro
+     que cae de arriba, blur con saturación para que lo de atrás se lea como color y
+     no como gris, y luz especular en el borde (más fuerte arriba a la izquierda).
+     Esta es la versión esmerilada para Safari y Firefox; en Chromium la reemplaza
+     la refracción de `.navbar-refract`, más abajo. */
   .nav-pill {
     border-radius: 9999px;
-    background: rgba(10, 10, 10, calc(0.88 * var(--navbar-fill)));
-    backdrop-filter: blur(calc(14px * var(--navbar-fill)));
-    -webkit-backdrop-filter: blur(calc(14px * var(--navbar-fill)));
-    border: 1px solid rgba(0, 255, 65, calc(0.25 * var(--navbar-fill)));
-    box-shadow: 0 4px 24px rgba(0, 255, 65, calc(0.04 * var(--navbar-fill)));
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, calc(0.09 * var(--navbar-fill))),
+        rgba(255, 255, 255, calc(0.02 * var(--navbar-fill)))
+      ),
+      rgba(10, 10, 10, calc(0.45 * var(--navbar-fill)));
+    backdrop-filter:
+      blur(calc(16px * var(--navbar-fill)))
+      saturate(calc(1 + 0.8 * var(--navbar-fill)));
+    -webkit-backdrop-filter:
+      blur(calc(16px * var(--navbar-fill)))
+      saturate(calc(1 + 0.8 * var(--navbar-fill)));
+    border: 1px solid rgba(255, 255, 255, calc(0.12 * var(--navbar-fill)));
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, calc(0.3 * var(--navbar-fill))),
+      inset -1px -1px 0 rgba(255, 255, 255, calc(0.1 * var(--navbar-fill))),
+      inset 0 0 16px rgba(255, 255, 255, calc(0.06 * var(--navbar-fill))),
+      0 10px 30px rgba(0, 0, 0, calc(0.45 * var(--navbar-fill)));
+  }
+
+  /* Refracción (solo Chromium, la clase la pone el script): el filtro SVG deforma lo
+     que pasa por detrás y su intensidad la mueve el script con `--navbar-fill`.
+     El tinte baja y el blur queda en unos pocos px para que la deformación se vea
+     sin que lo de atrás compita con los links. */
+  #navbar.navbar-refract .nav-pill {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, calc(0.08 * var(--navbar-fill))),
+        rgba(255, 255, 255, calc(0.02 * var(--navbar-fill)))
+      ),
+      rgba(10, 10, 10, calc(0.35 * var(--navbar-fill)));
+    backdrop-filter: url(#nav-glass);
+    -webkit-backdrop-filter: url(#nav-glass);
+  }
+
+  /* El SVG solo aporta el filtro: no ocupa lugar ni se ve. */
+  .nav-glass-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
   }
 
   /* Ruta moderna: el fondo aparece gradual, atado a la posición de scroll. */
@@ -320,6 +469,8 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
     /* 0.8rem en vez de 0.875rem: con `ssh atarico@contacto` la línea entera son
        33 caracteres y a text-sm no entra en 375px junto al hamburguesa. */
     font-size: 0.8rem;
+    /* Separa el texto de lo que pasa detrás del vidrio. */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
   }
 
   /* El comando es lo único que cede: el nombre y el cursor no se recortan nunca
@@ -342,6 +493,9 @@ const navSectionIds = links.map(({ href }) => href.slice(1));
   .nav-link {
     position: relative;
     padding-bottom: 2px;
+    /* Separa el texto de lo que pasa detrás del vidrio. El activo lo reemplaza por
+       su brillo verde. */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
   }
 
   .nav-link::after {

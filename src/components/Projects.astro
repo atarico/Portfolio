@@ -707,7 +707,7 @@ const statusKey: Record<Project['status'], string> = {
 
   /* ── Recorte en las destacadas ──
      6 líneas es lo que entra en --shot-h junto al título y a dos filas de tags.
-     Sin esto, Turnos empujaba la línea por debajo del borde de la imagen. */
+     Sin esto, una descripción larga empujaba la línea por debajo del borde de la imagen. */
   :global(html.js) .stack-card .card-description {
     display: -webkit-box;
     -webkit-box-orient: vertical;
