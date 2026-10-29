@@ -24,8 +24,8 @@ const {
   ogImage     = '/og-image.png',
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://atarico.dev');
-const ogImageURL   = new URL(ogImage, Astro.site ?? 'https://atarico.dev');
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://portfolio-atarico.vercel.app');
+const ogImageURL   = new URL(ogImage, Astro.site ?? 'https://portfolio-atarico.vercel.app');
 ---
 
 <!doctype html>
