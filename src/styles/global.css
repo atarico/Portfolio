@@ -59,10 +59,37 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Sin fondo propio: el color base lo pone `html`, y un fondo en `body` taparía la
+     capa de `body::before`. */
   body {
     min-height: 100dvh;
     line-height: 1.7;
-    background-color: var(--bg-primary);
+  }
+
+  /* Pantalla de fósforo, la misma del portfolio-agent: un brillo verde tenue arriba
+     y scanlines de CRT (1px de luz cada 3, al 1.5% de blanco) que dan textura sin
+     bajar el contraste del texto. Es un pseudo-elemento fijo y no
+     `background-attachment: fixed` para que el compositor lo mueva como una capa
+     y no haya que repintar el fondo en cada frame de scroll. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(
+        60rem 22rem at 50% -6rem,
+        color-mix(in oklab, var(--text-accent) 9%, transparent),
+        transparent 70%
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgb(255 255 255 / 0.015) 0,
+        rgb(255 255 255 / 0.015) 1px,
+        transparent 1px,
+        transparent 3px
+      );
   }
 
   a {
